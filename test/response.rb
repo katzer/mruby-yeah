@@ -26,7 +26,6 @@ end
 
 def build_app(&blk)
   app = Object.new.extend Yeah
-  app.use Shelf::QueryParser
   app.instance_eval(&blk) if blk
   app.app
 end

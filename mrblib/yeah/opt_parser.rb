@@ -83,6 +83,19 @@ module Yeah
     # If the specified flag is given in args list.
     #
     # @param [ String ] name The (long) flag name.
+    def flag_given?(flag)
+      @args.any? do |arg|
+        if flag.length == 1 || arg.length == 1
+          true if arg[0] == flag[0]
+        else
+          arg == flag
+        end
+      end
+    end
+
+    # If the specified flag is given in args list.
+    #
+    # @param [ String ] name The (long) flag name.
     def opt_given?(flag)
       if flag.length == 1
         @opts.keys.any? { |opt| opt[0] == flag[0] }

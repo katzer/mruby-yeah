@@ -20,6 +20,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+assert 'Yeah::OptParser#flag_given?' do
+  parser = Yeah::OptParser.new ['--help', '-v']
+
+  assert_true parser.flag_given? 'help'
+  assert_true parser.flag_given? 'h'
+  assert_true parser.flag_given? 'version'
+  assert_false parser.flag_given? 'other'
+end
+
 assert 'Yeah::OptParser#opt_given?' do
   parser = Yeah::OptParser.new ['--help', '-v']
   parser.add 'help'
