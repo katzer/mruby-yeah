@@ -41,6 +41,17 @@ module Yeah
     parser.add(opt, default_value, &blk)
   end
 
+  # Same as `Yeah#opt` however is does exit after the block has been called.
+  #
+  def opt!(opt, default_value = nil)
+    opt(opt, default_value) do |val|
+      if parser.flag_given? opt.to_s
+        puts yield(val)
+        @dry_run = true
+      end
+    end
+  end
+
   # Store a value referenced by a key.
   #
   # @param [ Object ] key The key to reference the value.
@@ -48,10 +59,10 @@ module Yeah
   #
   # @return [ Object] val
   def set(key, val = nil)
-    if val
-      server.options[key] = val
-    else
+    if key.is_a? Hash
       key.each { |k, v| server.options[k] = v }
+    else
+      server.options[key] = val
     end
   end
 
@@ -106,6 +117,8 @@ module Yeah
     @parser = nil
 
     url = "http://#{server.options[:host]}:#{server.options[:port]}"
+
+    return if @dry_run
 
     puts "Starting application at #{url}\n"
     server.start
