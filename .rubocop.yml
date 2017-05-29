@@ -25,3 +25,6 @@ Documentation:
 
 Style/Lambda:
   Enabled: false
+
+Style/MutableConstant:
+  Enabled: false

@@ -34,19 +34,6 @@ environment:
     COMPILER: C:\MinGW # MinGW 32-bit 5.3.0
   - MRUBY_VERSION: head
     COMPILER: C:\MinGW # MinGW 32-bit 5.3.0
-  - MRUBY_VERSION: head
-    COMPILER: C:\mingw-w64\i686-5.3.0-posix-dwarf-rt_v4-rev0 # MinGW-w64 5.3.0
-  - MRUBY_VERSION: head
-    COMPILER: C:\mingw-w64\i686-6.3.0-posix-dwarf-rt_v5-rev1 # MinGW-w64 6.3.0
-  - MRUBY_VERSION: 1.2.0
-    COMPILER: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC # Visual Studio 2015
-    TOOLCHAIN: visualcpp
-
-matrix:
-  allow_failures:
-  - TOOLCHAIN: visualcpp
-  exclude:
-  - TOOLCHAIN: visualcpp
 
 init:
 - CALL "%VCVARSALL%" amd64

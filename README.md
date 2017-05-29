@@ -1,2 +1,1 @@
-# mruby-yeah
-mruby on tiny rails
+# mruby-yeah, mruby on tiny rails <br> [![Build Status](https://travis-ci.org/katzer/mruby-yeah.svg?branch=master)](https://travis-ci.org/katzer/mruby-yeah) [![Build status](https://ci.appveyor.com/api/projects/status/yud3nsyo5tqnvgxx/branch/master?svg=true)](https://ci.appveyor.com/project/katzer/mruby-yeah/branch/master) [![codebeat badge](https://codebeat.co/badges/828229e5-c07a-4fc6-ba2a-7afc824685c5)](https://codebeat.co/projects/github-com-katzer-mruby-yeah-master)
