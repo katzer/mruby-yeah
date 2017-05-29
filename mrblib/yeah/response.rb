@@ -102,7 +102,7 @@ module Yeah
         headers[Shelf::CONTENT_LENGTH] = body.bytesize
       end
 
-      @res = [status, headers, [body]]
+      @res = [status, headers, [*body]]
     end
 
     # @private
