@@ -36,15 +36,19 @@ module Yeah
   # @param [ Object ] val The value to store.
   #
   # @return [ Object] val
-  def set(key, val)
-    @_elf.options[key] = val
+  def set(key, val = nil)
+    if val
+      server.options[key] = val
+    else
+      key.each { |k, v| server.options[k] = v }
+    end
   end
 
   # Delegate to the middleware chain of Shelf.
   #
   # @return [ Hash<String, Array> ]
   def middleware
-    @_elf.middleware
+    server.middleware
   end
 
   # Specifies middleware to use in a stack.
@@ -54,7 +58,7 @@ module Yeah
   #
   # @return [ Void ]
   def use(middleware, *args)
-    @_app.use middleware, *args
+    app.use middleware, *args
   end
 
   # Add a route to match a request.
@@ -66,7 +70,7 @@ module Yeah
   #
   # @return [ Void ]
   def route(route, method = R3::GET, &blk)
-    @_app.map(route, method) do
+    app.map(route, method) do
       run ->(env) { Yeah::Response.new(env, &blk).render }
     end
   end
@@ -87,10 +91,10 @@ module Yeah
   #
   # @return [ Void ]
   def yeah!
-    url = "http://#{@_elf.options[:host]}:#{@_elf.options[:port]}"
+    url = "http://#{server.options[:host]}:#{server.options[:port]}"
 
     puts "Starting application at #{url}\n"
-    @_elf.start
+    server.start
   end
 
   private
@@ -102,8 +106,22 @@ module Yeah
   # @return [ Void ]
   def _init_yeah!(*args, &blk)
     @_app = Shelf::Builder.new(*args, &blk)
-    @_elf = Shelf::Server.new(port: 3000, app: @_app)
-    @_app.run ->(_) { [200, {}, ['<h1>Yeah!</h1>']] }
+    @_elf = Shelf::Server.new(port: 3000, app: app)
+    app.run ->(_) { [200, {}, ['<h1>Yeah!</h1>']] }
+  end
+
+  # The Shelf app to server.
+  #
+  # @return [ Shelf::Builder ]
+  def app
+    @_app
+  end
+
+  # The Shelf handler to run.
+  #
+  # @return [ Shelf::Server ]
+  def server
+    @_elf
   end
 end
 

@@ -39,6 +39,7 @@ module Yeah
       params.each { |key, val| args << val if key.is_a? Symbol }
 
       res   = instance_exec(*args, &blk)
+
       @body = res unless @res
     end
 
@@ -78,7 +79,7 @@ module Yeah
     #                                  a hash with all attributes.
     #
     # @return [ Array ]
-    def render(opts = nil)
+    def render(opts = {})
       return @res if @res
 
       case opts
