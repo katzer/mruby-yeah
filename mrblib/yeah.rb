@@ -30,6 +30,17 @@ module Yeah
     obj._init_yeah!
   end
 
+  # Add a flag and a callback to invoke if flag is given later.
+  #
+  # @param [ String ] flag
+  # @param [ Object ] default_value The value to use if nothing else given.
+  # @param [ Proc ] blk
+  #
+  # @return [ Yeah::OptParser ] self
+  def opt(opt, default_value = nil, &blk)
+    parser.add(opt, default_value, &blk)
+  end
+
   # Store a value referenced by a key.
   #
   # @param [ Object ] key The key to reference the value.
@@ -91,6 +102,9 @@ module Yeah
   #
   # @return [ Void ]
   def yeah!
+    parser.parse(ARGV[1..-1]) if Object.const_defined? :ARGV
+    @parser = nil
+
     url = "http://#{server.options[:host]}:#{server.options[:port]}"
 
     puts "Starting application at #{url}\n"
@@ -105,23 +119,16 @@ module Yeah
   #
   # @return [ Void ]
   def _init_yeah!(*args, &blk)
-    @_app = Shelf::Builder.new(*args, &blk)
-    @_elf = Shelf::Server.new(port: 3000, app: app)
+    @app    = Shelf::Builder.new(*args, &blk)
+    @server = Shelf::Server.new(port: 3000, app: app)
+
     app.run ->(_) { [200, {}, ['<h1>Yeah!</h1>']] }
   end
 
-  # The Shelf app to server.
-  #
-  # @return [ Shelf::Builder ]
-  def app
-    @_app
-  end
+  attr_reader :app, :server
 
-  # The Shelf handler to run.
-  #
-  # @return [ Shelf::Server ]
-  def server
-    @_elf
+  def parser
+    @parser ||= Yeah::OptParser.new
   end
 end
 

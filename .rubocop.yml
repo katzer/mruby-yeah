@@ -28,3 +28,6 @@ Style/Lambda:
 
 Style/MutableConstant:
   Enabled: false
+
+Style/NumericPredicate:
+  EnforcedStyle: comparison
