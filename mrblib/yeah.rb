@@ -122,6 +122,7 @@ module Yeah
     @app    = Shelf::Builder.new(*args, &blk)
     @server = Shelf::Server.new(port: 3000, app: app)
 
+    app.use Shelf::QueryParser
     app.run ->(_) { [200, {}, ['<h1>Yeah!</h1>']] }
   end
 
