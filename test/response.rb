@@ -70,6 +70,10 @@ assert 'Yeah::Response#render' do
   app = build_app { get('/hi') { render headers: { 'test' => 'test' } } }
   assert_include app.call(env_for('/hi'))[1], 'test'
   assert_equal 'test', app.call(env_for('/hi'))[1]['test']
+
+  app = build_app { get('/hi') { render redirect: '/huhu' } }
+  assert_equal 303, app.call(env_for('/hi'))[0]
+  assert_include app.call(env_for('/hi'))[1]['Location'], '/huhu'
 end
 
 assert 'Yeah::Response#request' do

@@ -91,17 +91,18 @@ module Yeah
 
       status  = opts[:status]  || 200
       headers = opts[:headers] || {}
+      body    = []
 
-      body, type = self.class.render_body(status, @body, opts)
-
-      headers[Shelf::CONTENT_TYPE] = type
-
-      unless body.is_a? Array
+      if opts.include? :redirect
+        status = 303
+        headers[Shelf::LOCATION] = opts[:redirect]
+      else
+        body, type = self.class.render_body(status, @body, opts)
+        headers[Shelf::CONTENT_TYPE]   = type
         headers[Shelf::CONTENT_LENGTH] = body.bytesize
-        body = [body]
       end
 
-      @res = [status, headers, body]
+      @res = [status, headers, [body]]
     end
 
     # @private
