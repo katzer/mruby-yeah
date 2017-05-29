@@ -1,0 +1,62 @@
+# MIT License
+#
+# Copyright (c) Sebastian Katzer 2017
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+version: "{build}"
+
+image:
+- Visual Studio 2015
+
+environment:
+  global:
+    VCVARSALL: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
+    TOOLCHAIN: gcc
+  matrix:
+  - MRUBY_VERSION: 1.2.0
+    COMPILER: C:\MinGW # MinGW 32-bit 5.3.0
+  - MRUBY_VERSION: head
+    COMPILER: C:\MinGW # MinGW 32-bit 5.3.0
+  - MRUBY_VERSION: head
+    COMPILER: C:\mingw-w64\i686-5.3.0-posix-dwarf-rt_v4-rev0 # MinGW-w64 5.3.0
+  - MRUBY_VERSION: head
+    COMPILER: C:\mingw-w64\i686-6.3.0-posix-dwarf-rt_v5-rev1 # MinGW-w64 6.3.0
+  - MRUBY_VERSION: 1.2.0
+    COMPILER: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC # Visual Studio 2015
+    TOOLCHAIN: visualcpp
+
+matrix:
+  allow_failures:
+  - TOOLCHAIN: visualcpp
+  exclude:
+  - TOOLCHAIN: visualcpp
+
+init:
+- CALL "%VCVARSALL%" amd64
+- SET PATH=%COMPILER%\bin;%PATH%
+- SET PATH=C:\Ruby23-x64\bin;%PATH%
+- SET PATH=C:\cygwin\bin;%PATH%
+- gcc --version
+
+build_script:
+- rake compile
+
+test_script:
+# - rake test # Tests run fine on local env hover it hangs on ci-appveyor :`(
