@@ -120,6 +120,18 @@ module Yeah
     route('/', method) { render redirect: url } unless url == '/'
   end
 
+  # Add and configure Shelf::Static to serve assets from given root directory.
+  # Default url is /public
+  #
+  # @param [ String ] root Path to the root dir.
+  # @param [ Hash ] opts Additional options accepted by the middleware.
+  #                      Defaults to: { urls: ['/public'] }
+  #
+  # @return [ Void ]
+  def document_root(root, opts = {})
+    use Shelf::Static, { root: root, urls: ['/public'] }.merge(opts)
+  end
+
   # Start the server.
   #
   # @return [ Void ]

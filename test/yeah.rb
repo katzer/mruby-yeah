@@ -109,10 +109,30 @@ assert 'Yeah#root' do
     get('/ok') { 'OK' }
   end.app
 
-  status, headers, = app.call(env_for('/', 'GET'))
+  status, headers, = app.call(env_for('/'))
 
   assert_equal 303, status
   assert_equal '/ok', headers[Shelf::LOCATION]
+
+  status, = app.call(env_for('/', 'POST'))
+
+  assert_equal 405, status
+end
+
+assert 'Yeah#document_root' do
+  app = build_app { document_root '/i/dont/exist' }.app
+
+  status, headers, = app.call(env_for('/public/i/dont/exist/app.js'))
+  assert_equal 404, status
+  assert_equal 'pass', headers['X-Cascade']
+end
+
+assert 'Yeah#document_root', 'with opts' do
+  app = build_app { document_root '/i/dont/exist', urls: ['/'] }.app
+
+  status, headers, = app.call(env_for('/i/dont/exist/app.js'))
+  assert_equal 404, status
+  assert_equal 'pass', headers['X-Cascade']
 end
 
 assert 'Yeah#yeah!' do
