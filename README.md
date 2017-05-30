@@ -225,6 +225,17 @@ use Shelf::Static, urls: ['/public'], root: ENV['DOCUMENT_ROOT']
 Shelf is distributed with a variety of standard middleware for logging, debugging, and URL routing. Yeah! uses many of these components automatically based on configuration so you typically don't have to use them explicitly.
 
 
+## Server
+
+Yeah! works with any Shelf-compatible web server. Right now this is only mruby-simplehttpserver:
+
+```ruby
+set :server, 'simplehttpserver' # => Default
+```
+
+However its possible to register handlers for other servers. See [here][server] for more info.
+
+
 ## Good to know
 
 By default Yeah! extends _Object_ and works out-of-the-box for mruby-cli projects. However often it might be necessary to start Yeah! manually:
@@ -275,7 +286,8 @@ Made with :yum: from Leipzig
 
 
 [shelf]: https://github.com/katzer/mruby-shelf
-[builder]: https://github.com/katzer/mruby-shelf/blob/master/mrblib/shelf/builder.rb
 [mruby]: https://github.com/mruby/mruby
+[builder]: https://github.com/katzer/mruby-shelf/blob/master/mrblib/shelf/builder.rb
+[server]: https://github.com/katzer/mruby-shelf#handler
 [license]: http://opensource.org/licenses/MIT
 [appplant]: www.appplant.de
