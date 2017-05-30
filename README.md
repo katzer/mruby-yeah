@@ -77,6 +77,13 @@ get '/foo' do
 end
 ```
 
+Use `root` to specify the default entry point:
+
+```ruby
+# Redirect "GET /" to "GET /public/index.html"
+root '/public/index.html'
+```
+
 Route patterns may include named parameters, accessible via the `params` hash:
 
 ```ruby

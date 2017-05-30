@@ -103,6 +103,18 @@ assert 'Yeah', 'http method helpers' do
   assert_equal 200, app.app.call(env_for('/test', 'POST'))[0]
 end
 
+assert 'Yeah#root' do
+  app = build_app do
+    root '/ok'
+    get('/ok') { 'OK' }
+  end.app
+
+  status, headers, = app.call(env_for('/', 'GET'))
+
+  assert_equal 303, status
+  assert_equal '/ok', headers[Shelf::LOCATION]
+end
+
 assert 'Yeah#yeah!' do
   app    = build_app
   called = false

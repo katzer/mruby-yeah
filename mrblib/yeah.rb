@@ -109,6 +109,17 @@ module Yeah
     end
   end
 
+  # Specify where to redirect '/'.
+  #
+  # @param [ String ] redirect_to The URL where to redirect to.
+  # @param [ Int ] method The acceptable HTTP method for '/'.
+  #                       Defaults to: 'GET'
+  #
+  # @return [ Void ]
+  def root(url, method = R3::GET)
+    route('/', method) { render redirect: url } unless url == '/'
+  end
+
   # Start the server.
   #
   # @return [ Void ]
