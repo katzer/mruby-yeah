@@ -23,9 +23,6 @@
 module Yeah
   # Helper methods to use to generate responses
   class Response
-    # @private
-    EXTENSIONS = { plain: '.txt', html: '.html', json: '.json' }
-
     # Calls the callback to generate a Shelf response.
     #
     # @param [ Hash ] env The shelf request.
