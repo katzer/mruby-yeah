@@ -128,7 +128,7 @@ end
 ```
 
 
-# Response
+## Response
 
 Each routing block is invoked within the scope of an instance of `Yeah::Response`. The class provides access to methods like `request`, `params`, `logger` and `render`.
 
@@ -224,6 +224,26 @@ use Shelf::Static, urls: ['/public'], root: ENV['DOCUMENT_ROOT']
 
 Shelf is distributed with a variety of standard middleware for logging, debugging, and URL routing. Yeah! uses many of these components automatically based on configuration so you typically don't have to use them explicitly.
 
+
+## Good to know
+
+By default Yeah! extends _Object_ and works out-of-the-box for mruby-cli projects. However often it might be necessary to start Yeah! manually:
+
+```ruby
+class App
+  include Yeah
+
+  opt :port { |port| set :port, port }
+
+  get '/' { 'It Works!' }
+
+  def initialize
+    _init_yeah!
+  end
+end
+
+App.new.yeah! ['-p', 8080]
+```
 
 ## Development
 
