@@ -36,57 +36,6 @@ Hi Ben                                                |   Hi Tom and Jerry
 ```
 
 
-## Usage
-
-TODO
-
-
-## Sample
-
-```ruby
-
-opt! :help do
-  <<-usage
-
-usage: iss [options...]
-Options:
--e, --environment The environment to run the server with.
--p, --port        The port number to start the local server on.
-                  Defaults to: 3000
--s, --server      The server to use for.
--h, --help        This help text
--v, --version     Show version number
-usage
-end
-
-opt! :version do
-  YourGem::VERSION
-end
-
-opt :port, 3000 do |port|
-  set :port, port
-end
-
-opt :server, 'simplehttpserver' do |server|
-  set :server, server
-end
-
-opt :environment, 'development' do |env|
-  ENV['SHELF_ENV'] = env
-end
-
-use Shelf::Static, urls: ['/public'], root: ENV['DOCUMENT_ROOT']
-
-get '/' do
-  render redirect: 'public/index.html'
-end
-
-get '/api/reports/{report_id}/results' |report_id|
-  render json: Report.find(report_id).results
-end
-```
-
-
 ## Installation
 
 Add the line below to your `build_config.rb`:
@@ -106,6 +55,174 @@ MRuby::Gem::Specification.new('your-mrbgem') do |spec|
   spec.add_dependency 'mruby-yeah'
 end
 ```
+
+
+## Routes
+
+In Yeah!, a route is an HTTP method paired with a URL-matching pattern. Each route is associated with a block:
+
+```ruby
+post '/' do
+  .. create something ..
+end
+```
+
+Routes are matched in the order they are defined. The first route that matches the request is invoked.
+
+Routes with trailing slashes are __not__ different from the ones without:
+
+```ruby
+get '/foo' do
+  # Does match "GET /foo/"
+end
+```
+
+Route patterns may include named parameters, accessible via the `params` hash:
+
+```ruby
+# matches "GET /hello/foo" and "GET /hello/bar"
+get '/hello/{name}' do
+  # params[:name] is 'foo' or 'bar'
+  "Hello #{params[:name]}!"
+end
+```
+
+You can also access named parameters via block parameters:
+
+```ruby
+# matches "GET /hello/foo" and "GET /hello/bar"
+get '/hello/{name}' do |name|
+  # params[:name] is 'foo' or 'bar'
+  # name stores params[:name]
+  "Hello #{name}!"
+end
+```
+
+Routes may also utilize query parameters:
+
+```ruby
+# matches "GET /posts?title=foo&author=bar"
+get '/posts' do
+  title  = params['title']
+  author = params['author']
+end
+```
+
+Route matching with Regular Expressions:
+
+```ruby
+get '/blog/post/{id:\\d+}' |id|
+  post = Post.find(id)
+end
+```
+
+Support for regular expression requires __mruby-regexp-pcre__ to be installed before mruby-yeah!
+
+Routes can also be defined to match any HTTP method:
+
+```ruby
+# matches "GET /" and "PUT /" and ...
+route '/', R3::ANY do
+  request[Shelf::REQUEST_METHOD]
+end
+```
+
+
+# Response
+
+Each routing block is invoked within the scope of an instance of `Yeah::Response`. The class provides access to methods like `request`, `params`, `logger` and `render`.
+
+- `Yeah::Response#request` returns the Shelf request and is basically a hash.
+
+```ruby
+get '/' do
+  request # => { 'REQUEST_METHOD' => 'GET', 'REQUEST_PATH' => '/', 'User-Agent' => '...' }
+end
+```
+
+- `Yeah::Response#params` returns the query params and named URL params. Query params are accessible by string keys and named params by symbol.
+
+```ruby
+# "GET /blogs/b1/posts/p1?blog_id=b2"
+get '/blogs/{blog_id}/posts/{post_id}' do
+  params # => { 'blog_id' => 'b2', blog_id: 'b1', post_id: 'p1' }
+end
+```
+
+- `Yeah::Response#logger` returns the query params and named URL params. Query params are accessible by string keys and named params by symbol. Dont forget to include the required middleware!
+
+```ruby
+use Shelf::Logger
+
+get '/' do
+  logger # => <Logger:0x007fae54987308>
+end
+```
+
+- `Yeah::Response#render` returns a well-formed shelf response. The method allows varoius kind of invokation:
+
+```ruby
+get '/500' do                     |   get '/yeah' do
+  render 500                      |     render html: '<h1>Yeah!</h1>'
+end                               |   end
+                                  |
+get '/say_hi' do                  |   post '/api/stats' do
+  render 'Hi'                     |     render json: Stats.create(params), status: 201, headers: {...}
+end                               |   end
+                                  |
+get '/say_hello' do               |   def '/' do
+  'Hello'                         |     render redirect: 'public/index.html'
+end                               |   end
+```
+
+
+## Command Line Arguments
+
+Yeah! ships with a small opt parser. Each option is associated with a block:
+
+```ruby
+# matches "your-mrbgem --port 80" or "your-mrbgem -p 80"
+opt :port, 8080 do |port|
+  # port is 80
+  set :port, port
+end
+```
+
+Opts can have a default value. The block will be invoked in any case either with the command-line value, its default value or just _nil_.
+
+Sometimes however it is intended to only print out some meta informations for a single given option and then exit without starting the server:
+
+```ruby
+# matches "your-mrbgem --version" or "your-mrbgem -v"
+opt! :version do
+  # prints 'v1.0.0' on STDOUT and exit
+  'v1.0.0'
+end
+```
+
+
+## Shelf Middleware
+
+Sinatra rides on [Shelf][shelf], a minimal standard interface for mruby web frameworks. One of Shelf's most interesting capabilities for application developers is support for "middleware" -- components that sit between the server and your application monitoring and/or manipulating the HTTP request/response to provide various types of common functionality.
+
+Sinatra makes building Rack middleware pipelines a cinch via a top-level `use` method:
+
+```ruby
+use Shelf::CatchError
+use MyCustomMiddleware
+
+get '/hello' do
+  'Hello World'
+end
+```
+
+The semantics of `use` are identical to those defined for the [Shelf::Builder][builder] DSL. For example, the use method accepts multiple/variable args as well as blocks:
+
+```ruby
+use Shelf::Static, urls: ['/public'], root: ENV['DOCUMENT_ROOT']
+```
+
+Shelf is distributed with a variety of standard middleware for logging, debugging, and URL routing. Yeah! uses many of these components automatically based on configuration so you typically don't have to use them explicitly.
 
 
 ## Development
@@ -138,6 +255,7 @@ Made with :yum: from Leipzig
 
 
 [shelf]: https://github.com/katzer/mruby-shelf
+[builder]: https://github.com/katzer/mruby-shelf/blob/master/mrblib/shelf/builder.rb
 [mruby]: https://github.com/mruby/mruby
 [license]: http://opensource.org/licenses/MIT
 [appplant]: www.appplant.de

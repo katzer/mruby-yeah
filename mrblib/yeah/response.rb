@@ -72,8 +72,8 @@ module Yeah
     # render json: 'OK', status: 200, headers: {}
     # => [200, { Content-Type: 'application/json', ... }, ['OK']]
     #
-    # @params [ Hash|String|Int ] opts Either the status code, the plain body or
-    #                                  a hash with all attributes.
+    # @params [ Hash|String|Int ] opts Either the status code, the plain body
+    #                                  or a hash with all attributes.
     #
     # @return [ Array ]
     def render(opts = {})
