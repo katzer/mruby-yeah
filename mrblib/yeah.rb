@@ -36,7 +36,7 @@ module Yeah
   # @param [ Object ] default_value The value to use if nothing else given.
   # @param [ Proc ] blk
   #
-  # @return [ Yeah::OptParser ] self
+  # @return [ Void ]
   def opt(opt, default_value = nil, &blk)
     parser.add(opt, default_value, &blk)
   end
@@ -112,8 +112,8 @@ module Yeah
   # Start the server.
   #
   # @return [ Void ]
-  def yeah!
-    parser.parse(ARGV[1..-1]) if Object.const_defined? :ARGV
+  def yeah!(args = [])
+    parser.parse(args) if @parser
     @parser = nil
 
     url = "http://#{server.options[:host]}:#{server.options[:port]}"
@@ -141,6 +141,9 @@ module Yeah
 
   attr_reader :app, :server
 
+  # Lazy created opt parser.
+  #
+  # @return [ Yeah::OptParser ]
   def parser
     @parser ||= Yeah::OptParser.new
   end
@@ -148,8 +151,11 @@ end
 
 extend Yeah
 
-# Default entry point to mruby-cli generated apps.
+# Default entry point to mruby-cli generated apps to run Yeah!
 #
-def __main__(_)
-  yeah!
+# @param [ Array<String> ] args ARGV
+#
+# @return [ Void ]
+def __main__(args)
+  yeah!(args[1..-1])
 end
