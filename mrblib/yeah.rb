@@ -140,6 +140,11 @@ module Yeah
   #
   # @return [ Void ]
   def log_folder(dir, out = nil, err = nil)
+    @logs = [dir, out, err]
+  end
+
+  # @private
+  def self.redirect_to_log_folder(dir, out, err)
     Dir.mkdir(dir) if Object.const_defined?(:Dir) && !Dir.exist?(dir)
 
     out ||= "#{Object.const_defined?(:ARGV) ? ARGV[0] : 'yeah'}.log"
@@ -147,8 +152,8 @@ module Yeah
     $stdout.close
     $stderr.close
 
-    $stdout = File.new("#{dir}/#{out}", 'w')
-    $stderr = File.new("#{dir}/#{err || out}", 'w')
+    $stdout = File.new("#{dir}/#{out}", 'a+')
+    $stderr = File.new("#{dir}/#{err || out}", 'a+')
   end
 
   # Start the server.
@@ -156,13 +161,17 @@ module Yeah
   # @return [ Void ]
   def yeah!(args = [])
     parser.parse(args) if @parser
-    @parser = nil
-
-    url = "http://#{server.options[:host]}:#{server.options[:port]}"
 
     return if @dry_run
 
+    url = "http://#{server.options[:host]}:#{server.options[:port]}"
+
     puts "Starting application at #{url}\n"
+
+    Yeah.redirect_to_log_folder(*@logs) if @logs
+
+    @parser, @logs = nil
+
     server.start
   end
 
@@ -170,18 +179,22 @@ module Yeah
 
   # Initializes Yeah!
   #
-  # @params See `Shelf::Builder`
-  #
   # @return [ Void ]
-  def _init_yeah!(*args, &blk)
-    @app    = Shelf::Builder.new(*args, &blk)
-    @server = Shelf::Server.new(port: 3000, app: app)
+  def _init_yeah!
+    @server = Shelf::Server.new(port: 3000, app: Shelf::Builder.new)
 
     app.use Shelf::QueryParser
     app.run ->(_) { [200, {}, ['<h1>Yeah!</h1>']] }
   end
 
-  attr_reader :app, :server
+  attr_reader :server
+
+  # The Shelf app builder.
+  #
+  # @return [ Shelf::Builder ]
+  def app
+    server.app
+  end
 
   # Lazy created opt parser.
   #
