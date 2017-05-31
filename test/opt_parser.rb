@@ -26,6 +26,7 @@ assert 'Yeah::OptParser#flag_given?' do
   assert_true parser.flag_given? 'help'
   assert_true parser.flag_given? 'h'
   assert_true parser.flag_given? 'version'
+  assert_false parser.flag_given? 'hilfe'
   assert_false parser.flag_given? 'other'
 end
 
@@ -55,12 +56,16 @@ assert 'Yeah::OptParser#unknown_opts' do
   parser = Yeah::OptParser.new ['-?']
   parser.add 'help'
   assert_include parser.unknown_opts, '?'
+
+  parser = Yeah::OptParser.new ['-p', '80']
+  parser.add 'port'
+  assert_true parser.unknown_opts.empty?
 end
 
 assert 'Yeah::OptParser#opt_value' do
-  parser = Yeah::OptParser.new ['--port', 8000, '--ip', '0.0.0.0', '-v']
+  parser = Yeah::OptParser.new ['--port', '8000', '--ip', '0.0.0.0', '-v']
 
-  assert_equal 8000, parser.opt_value('port')
+  assert_equal '8000', parser.opt_value('port')
   assert_equal '0.0.0.0', parser.opt_value('ip')
   assert_nil parser.opt_value('v')
   assert_equal '1.0.0', parser.opt_value('v', '1.0.0')
@@ -73,16 +78,16 @@ assert 'Yeah::OptParser#parse', 'unknown flag' do
 
   parser.add(:unknown) { |flags| opts = flags || [] }
 
-  parser.parse(['--port', 8000], true)
+  parser.parse(['--port', '8000'], true)
   assert_nil opts
 
-  parser.parse(['--port', 8000])
+  parser.parse(['--port', '8000'])
   assert_equal ['port'], parser.unknown_opts
   assert_equal parser.unknown_opts, opts
 
   parser.add(:port, 80) { |p| port = p }
   parser.parse(['--port'])
   assert_equal 80, port
-  parser.parse(['--port', 8080])
-  assert_equal 8080, port
+  parser.parse(['--port', '8080'])
+  assert_equal '8080', port
 end

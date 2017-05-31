@@ -107,7 +107,7 @@ module Yeah
     # Extract the value of the specified options.
     # Raises an error if the option has been specified but without an value.
     #
-    # @param [ String ] opt The options to look for.
+    # @param [ String ] opt The option to look for.
     # @param [ Object ] default_value The default value to use for
     #                                 if the options has not been specified.
     #
@@ -118,7 +118,7 @@ module Yeah
 
       return default_value unless value
 
-      value if !value.is_a?(String) || value[0] != '-'
+      value[0] if value[0] != '-'
     end
 
     private
@@ -130,10 +130,10 @@ module Yeah
     # @return [ Array<String> ]
     def normalize_args(args)
       args.map do |opt|
-        if !opt.is_a?(String) || opt[0] != '-'
-          opt
+        if opt.to_s[0] != '-'
+          [opt]
         else
-          opt[1] == '-' ? opt[2..-1] : opt[1..-1]
+          opt[(opt[1] == '-' ? 2 : 1)..-1]
         end
       end
     end
