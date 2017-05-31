@@ -132,6 +132,25 @@ module Yeah
     use Shelf::Static, { root: root, urls: ['/public'] }.merge(opts)
   end
 
+  # Specify where to place the logs.
+  #
+  # @param [ String ] dir The path of the log folder.
+  # @param [ String ] out Optional name of the log file.
+  # @param [ String ] err Optional name of the error log file.
+  #
+  # @return [ Void ]
+  def log_folder(dir, out = nil, err = nil)
+    Dir.mkdir(dir) if Object.const_defined?(:Dir) && !Dir.exist?(dir)
+
+    out ||= "#{Object.const_defined?(:ARGV) ? ARGV[0] : 'yeah'}.log"
+
+    $stdout.close
+    $stderr.close
+
+    $stdout = File.new("#{dir}/#{out}", 'w')
+    $stderr = File.new("#{dir}/#{err || out}", 'w')
+  end
+
   # Start the server.
   #
   # @return [ Void ]
