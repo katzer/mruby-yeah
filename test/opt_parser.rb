@@ -66,6 +66,7 @@ assert 'Yeah::OptParser#opt_value' do
   parser = Yeah::OptParser.new ['--port', '8000', '--ip', '0.0.0.0', '-v']
 
   assert_equal '8000', parser.opt_value('port')
+  assert_equal '8000', parser.opt_value('p')
   assert_equal '0.0.0.0', parser.opt_value('ip')
   assert_nil parser.opt_value('v')
   assert_equal '1.0.0', parser.opt_value('v', '1.0.0')

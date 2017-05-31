@@ -113,8 +113,9 @@ module Yeah
     #
     # @return [ Object ]
     def opt_value(opt, default_value = nil)
-      index   = @args.index(opt)
-      value   = @args[index + 1] if index
+      index = @args.index(opt)
+      @args.each_index { |i| index = i if opt[0] == @args[i][0] } unless index
+      value = @args[index + 1] if index
 
       return default_value unless value
 
