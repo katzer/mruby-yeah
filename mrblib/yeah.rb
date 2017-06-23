@@ -86,26 +86,28 @@ module Yeah
   # Add a route to match a request.
   #
   # @param [ String ] route The route to add for.
-  # @param [ Int ] method The HTTP method to match.
-  #                       Defaults to: R3::GET
-  # @param [ Proc ] &blk Code block to execute for.
+  # @param [ Int ] method   The HTTP method to match.
+  #                         Defaults to: R3::GET
+  # @param [ Object ] *data Additional data objects.
+  # @param [ Proc ] &blk    Code block to execute for.
   #
   # @return [ Void ]
-  def route(route, method = R3::GET, &blk)
-    app.map(route, method) do
-      run ->(env) { Yeah::Response.new(env, &blk).render }
+  def route(route, method = R3::GET, *data, &blk)
+    app.map(route, method, *data) do
+      run ->(env) { Yeah.render(env, &blk) }
     end
   end
 
   # Add a route to match request by a specfic HTTP method.
   #
   # @param [ String ] route The route to add for.
-  # @param [ Proc ] &blk Code block to execute for.
+  # @param [ Object ] *data Additional data objects.
+  # @param [ Proc ] &blk    Code block to execute for.
   #
   # @return [ Void ]
   %w[GET POST PUT DELETE PATCH HEAD OPTIONS].each do |method|
-    define_method(method.downcase) do |route, &blk|
-      route(route, R3.method_code_for(method), &blk)
+    define_method(method.downcase) do |route, *data, &blk|
+      route(route, R3.method_code_for(method), *data, &blk)
     end
   end
 
@@ -154,6 +156,13 @@ module Yeah
 
     $stdout = File.new("#{dir}/#{out}", 'a+')
     $stderr = File.new("#{dir}/#{err || out}", 'a+')
+  end
+
+  # @private
+  def self.render(env, &blk)
+    data = env[Shelf::SHELF_R3_DATA]
+    controller = (data[:controller] if data.is_a?(Hash)) || Controller
+    controller.new(env, &blk).render
   end
 
   # Start the server.

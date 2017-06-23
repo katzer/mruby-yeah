@@ -22,11 +22,11 @@
 
 module Yeah
   # Helper methods to use to generate responses
-  class Response
+  class Controller
     # Calls the callback to generate a Shelf response.
     #
-    # @param [ Hash ] env The shelf request.
-    # @param [ Proc ] blk The app callback.
+    # @param [ Hash ] env     The shelf request.
+    # @param [ Proc ] blk     The app callback.
     #
     # @return [ Void ]
     def initialize(env, &blk)
@@ -35,7 +35,12 @@ module Yeah
       args  = []
       params.each { |key, val| args << val if key.is_a? Symbol }
 
-      res   = instance_exec(*args, &blk)
+      if blk
+        res = instance_exec(*args, &blk)
+      else
+        data = env[Shelf::SHELF_R3_DATA]
+        send(data[:action], *args)
+      end
 
       @body = res unless @res
     end

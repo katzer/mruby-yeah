@@ -40,7 +40,13 @@ class Logger
   def initialize(*_); end
 end
 
-assert 'Yeah::Response#render' do
+class MyController < Yeah::Controller
+  def say_hello(name)
+    render "Hello #{name.capitalize}"
+  end
+end
+
+assert 'Yeah::Controller#render' do
   app = build_app { get('/hi') { 'Hi' } }
   assert_equal ['Hi'], app.call(env_for('/hi'))[2]
   assert_include app.call(env_for('/hi'))[1]['Content-Type'], 'text/plain'
@@ -76,26 +82,34 @@ assert 'Yeah::Response#render' do
   assert_include app.call(env_for('/hi'))[1]['Location'], '/huhu'
 end
 
-assert 'Yeah::Response#request' do
+assert 'Yeah::Controller#request' do
   app = build_app { get('/hi') { request['PATH_INFO'] } }
   assert_equal ['/hi'], app.call(env_for('/hi'))[2]
 end
 
-assert 'Yeah::Response#params' do
+assert 'Yeah::Controller#params' do
   app = build_app { get('/hi') { "Hi #{params['name']}" } }
   assert_equal ['Hi Ben'], app.call(env_for('/hi', 'name=Ben'))[2]
 end
 
-assert 'Yeah::Response#args' do
+assert 'Yeah::Controller#args' do
   app = build_app { get('/hi/{name}') { |name| "Hi #{name}" } }
   assert_equal ['Hi Ben'], app.call(env_for('/hi/Ben'))[2]
 end
 
-assert 'Yeah::Response#logger' do
+assert 'Yeah::Controller#logger' do
   app = build_app do
     use Shelf::Logger, 101
     get('/log') { logger.class.to_s }
   end
 
   assert_equal ['Logger'], app.call(env_for('/log'))[2]
+end
+
+assert 'Yeah::Controller', 'controller+action' do
+  app = build_app do
+    get '/say_hello/{name}', controller: MyController, action: 'say_hello'
+  end
+
+  assert_equal ['Hello Ben'], app.call(env_for('/say_hello/ben'))[2]
 end

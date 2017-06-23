@@ -137,9 +137,9 @@ end
 
 ## Response
 
-Each routing block is invoked within the scope of an instance of `Yeah::Response`. The class provides access to methods like `request`, `params`, `logger` and `render`.
+Each routing block is invoked within the scope of an instance of `Yeah::Controller`. The class provides access to methods like `request`, `params`, `logger` and `render`.
 
-- `Yeah::Response#request` returns the Shelf request and is basically a hash.
+- `request` returns the Shelf request and is basically a hash.
 
 ```ruby
 get '/' do
@@ -147,7 +147,7 @@ get '/' do
 end
 ```
 
-- `Yeah::Response#params` returns the query params and named URL params. Query params are accessible by string keys and named params by symbol.
+- `params` returns the query params and named URL params. Query params are accessible by string keys and named params by symbol.
 
 ```ruby
 # "GET /blogs/b1/posts/p1?blog_id=b2"
@@ -156,7 +156,7 @@ get '/blogs/{blog_id}/posts/{post_id}' do
 end
 ```
 
-- `Yeah::Response#logger` returns the query params and named URL params. Query params are accessible by string keys and named params by symbol. Dont forget to include the required middleware!
+- `logger` returns the query params and named URL params. Query params are accessible by string keys and named params by symbol. Dont forget to include the required middleware!
 
 ```ruby
 use Shelf::Logger
@@ -166,7 +166,7 @@ get '/' do
 end
 ```
 
-- `Yeah::Response#render` returns a well-formed shelf response. The method allows varoius kind of invokation:
+- `render` returns a well-formed shelf response. The method allows varoius kind of invokation:
 
 ```ruby
 get '/500' do                     |   get '/yeah' do
@@ -180,6 +180,21 @@ end                               |   end
 get '/say_hello' do               |   def '/' do
   'Hello'                         |     render redirect: 'public/index.html'
 end                               |   end
+```
+
+
+## Controller
+
+Instead of a code block to execute a route also accepts an controller and an action similar to Rails.
+
+```ruby
+class GreetingsController < Shelf::Controller
+  def greet(name)
+    render "Hello #{name.capitalize}"
+  end
+end
+
+get 'greet/{name}', controller: GreetingsController, action: 'greet'
 ```
 
 
