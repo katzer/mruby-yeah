@@ -30,7 +30,7 @@ def build_app(&blk)
   app.app
 end
 
-class Object
+class FooYeah
   def to_json
     '__json__'
   end
@@ -63,7 +63,7 @@ assert 'Yeah::Controller#render' do
   assert_equal ['Hi'], app.call(env_for('/hi'))[2]
   assert_include app.call(env_for('/hi'))[1]['Content-Type'], 'text/html'
 
-  app = build_app { get('/hi') { render json: [1, 2] } }
+  app = build_app { get('/hi') { render json: FooYeah.new } }
   assert_equal ['__json__'], app.call(env_for('/hi'))[2]
   assert_equal 'appplication/json', app.call(env_for('/hi'))[1]['Content-Type']
 
