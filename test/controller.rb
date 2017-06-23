@@ -65,7 +65,7 @@ assert 'Yeah::Controller#render' do
 
   app = build_app { get('/hi') { render json: FooYeah.new } }
   assert_equal ['__json__'], app.call(env_for('/hi'))[2]
-  assert_equal 'appplication/json', app.call(env_for('/hi'))[1]['Content-Type']
+  assert_equal 'application/json', app.call(env_for('/hi'))[1]['Content-Type']
 
   app = build_app { get('/hi') { render 404 } }
   assert_equal 404, app.call(env_for('/hi'))[0]
