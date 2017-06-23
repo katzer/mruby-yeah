@@ -188,7 +188,7 @@ end                               |   end
 Instead of a code block to execute a route also accepts an controller and an action similar to Rails.
 
 ```ruby
-class GreetingsController < Shelf::Controller
+class GreetingsController < Yeah::Controller
   def greet(name)
     render "Hello #{name.capitalize}"
   end
