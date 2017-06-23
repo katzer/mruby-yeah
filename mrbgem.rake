@@ -1,4 +1,4 @@
-  # MIT License
+# MIT License
 #
 # Copyright (c) Sebastian Katzer 2017
 #
@@ -28,7 +28,7 @@ MRuby::Gem::Specification.new('mruby-yeah') do |spec|
   spec.summary = 'mruby on tiny rails'
   spec.version = Yeah::VERSION
 
-  spec.add_dependency 'mruby-simplehttpserver', github: 'katzer/mruby-simplehttpserver', branch: 'shelf'
+  spec.add_dependency 'mruby-simplehttpserver', mgem: 'mruby-simplehttpserver'
   spec.add_dependency 'mruby-object-ext', core: 'mruby-object-ext'
   spec.add_dependency 'mruby-sprintf', core: 'mruby-sprintf'
   spec.add_dependency 'mruby-print', core: 'mruby-print'
