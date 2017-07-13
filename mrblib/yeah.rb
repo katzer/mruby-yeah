@@ -164,26 +164,6 @@ module Yeah
     @logs = [dir, out, err]
   end
 
-  # @private
-  def self.redirect_to_log_folder(dir, out, err)
-    Dir.mkdir(dir) if Object.const_defined?(:Dir) && !Dir.exist?(dir)
-
-    out ||= "#{Object.const_defined?(:ARGV) ? ARGV[0] : 'yeah'}.log"
-
-    $stdout.close
-    $stderr.close
-
-    $stdout = File.new("#{dir}/#{out}", 'a+')
-    $stderr = File.new("#{dir}/#{err || out}", 'a+')
-  end
-
-  # @private
-  def self.render(env, &blk)
-    data = env[Shelf::SHELF_R3_DATA]
-    controller = (data[:controller] if data.is_a?(Hash)) || Controller
-    controller.new(env, &blk).render
-  end
-
   # Start the server.
   #
   # @return [ Void ]
@@ -202,8 +182,6 @@ module Yeah
 
     server.start
   end
-
-  private
 
   # Initializes Yeah!
   #
@@ -229,6 +207,33 @@ module Yeah
   # @return [ Yeah::OptParser ]
   def parser
     @parser ||= Yeah::OptParser.new
+  end
+
+  # The server settings.
+  #
+  # @return [ Hash ]
+  def settings
+    server.options
+  end
+
+  # @private
+  def self.redirect_to_log_folder(dir, out, err)
+    Dir.mkdir(dir) if Object.const_defined?(:Dir) && !Dir.exist?(dir)
+
+    out ||= "#{Object.const_defined?(:ARGV) ? ARGV[0] : 'yeah'}.log"
+
+    $stdout.close
+    $stderr.close
+
+    $stdout = File.new("#{dir}/#{out}", 'a+')
+    $stderr = File.new("#{dir}/#{err || out}", 'a+')
+  end
+
+  # @private
+  def self.render(env, &blk)
+    data = env[Shelf::SHELF_R3_DATA]
+    controller = (data[:controller] if data.is_a?(Hash)) || Controller
+    controller.new(env, &blk).render
   end
 end
 

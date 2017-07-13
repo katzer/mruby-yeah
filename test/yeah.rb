@@ -66,6 +66,11 @@ assert 'Yeah#disable' do
   assert_false app.server.options[:logging]
 end
 
+assert 'Yeah#settings' do
+  app = build_app { set port: 80 }
+  assert_equal 80, app.settings[:port]
+end
+
 assert 'Yeah#middleware' do
   app = build_app { set port: 80 }
   assert_kind_of Hash, app.middleware
