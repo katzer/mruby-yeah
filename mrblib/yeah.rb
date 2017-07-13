@@ -175,7 +175,7 @@ module Yeah
 
     url = "http://#{server.options[:host]}:#{server.options[:port]}"
 
-    puts "Starting application at #{url}\n"
+    puts "Starting application in #{ENV['SHELF_ENV']} mode at #{url}"
 
     Yeah.redirect_to_log_folder(*@logs) if @logs
 
