@@ -27,12 +27,12 @@ compiler:
 - clang
 
 env:
-- MRUBY_VERSION=1.2.0
+- MRUBY_VERSION=1.3.0
 - MRUBY_VERSION=head
 
 matrix:
   allow_failures:
-  - env: MRUBY_VERSION=1.2.0
+  - env: MRUBY_VERSION=head
 
 before_script:
 - export TOOLCHAIN=$CC
