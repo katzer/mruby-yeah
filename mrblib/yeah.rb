@@ -43,6 +43,7 @@ module Yeah
 
   # Same as `Yeah#opt` however is does exit after the block has been called.
   #
+  # @return [ Void ]
   def opt!(opt, default_value = nil)
     opt(opt, default_value) do |val|
       if parser.flag_given? opt.to_s
@@ -57,13 +58,31 @@ module Yeah
   # @param [ Object ] key The key to reference the value.
   # @param [ Object ] val The value to store.
   #
-  # @return [ Object] val
+  # @return [ Void ]
   def set(key, val = nil)
     if key.is_a? Hash
       key.each { |k, v| server.options[k] = v }
     else
       server.options[key] = val
     end
+  end
+
+  # Same as `set :option, true`
+  #
+  # @param [ Object ] key The key to set to true.
+  #
+  # @return [ Void ]
+  def enable(key)
+    set(key, true)
+  end
+
+  # Same as `set :option, false`
+  #
+  # @param [ Object ] key The key to set to false.
+  #
+  # @return [ Void ]
+  def disable(key)
+    set(key, false)
   end
 
   # Delegate to the middleware chain of Shelf.

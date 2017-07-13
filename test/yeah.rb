@@ -56,6 +56,16 @@ assert 'Yeah#set', 'map' do
   assert_equal 80, app.server.options[:port]
 end
 
+assert 'Yeah#enable' do
+  app = build_app { enable :logging }
+  assert_true app.server.options[:logging]
+end
+
+assert 'Yeah#disable' do
+  app = build_app { disable :logging }
+  assert_false app.server.options[:logging]
+end
+
 assert 'Yeah#middleware' do
   app = build_app { set port: 80 }
   assert_kind_of Hash, app.middleware
