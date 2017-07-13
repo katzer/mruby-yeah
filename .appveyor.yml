@@ -30,10 +30,14 @@ environment:
     VCVARSALL: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
     TOOLCHAIN: gcc
   matrix:
-  - MRUBY_VERSION: 1.2.0
+  - MRUBY_VERSION: 1.3.0
     COMPILER: C:\MinGW # MinGW 32-bit 5.3.0
   - MRUBY_VERSION: head
     COMPILER: C:\MinGW # MinGW 32-bit 5.3.0
+
+matrix:
+  allow_failures:
+  - MRUBY_VERSION: head
 
 init:
 - CALL "%VCVARSALL%" amd64
