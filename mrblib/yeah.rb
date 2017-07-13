@@ -20,6 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+# rubocop:disable Style/ModuleLength
+
 module Yeah
   # Initializes Yeah! once it has been extended to main.
   #
@@ -83,6 +85,20 @@ module Yeah
   # @return [ Void ]
   def disable(key)
     set(key, false)
+  end
+
+  # Run at startup in any or for given environment.
+  #
+  # @param [ String ] *envs Optional list of environments.
+  # @param [ Proc ] blk The code to execute at startup.
+  #
+  # @return [ Void ]
+  def configure(*envs, &blk)
+    if envs.any?
+      envs.each { |env| (@initializers ||= {})[env] = blk }
+    else
+      @initializers = { any: blk }
+    end
   end
 
   # Delegate to the middleware chain of Shelf.
@@ -172,6 +188,8 @@ module Yeah
 
     return if @dry_run
 
+    Yeah.run_initializers(@initializers)
+
     url = "http://#{server.options[:host]}:#{server.options[:port]}"
 
     puts "Starting application in #{ENV['SHELF_ENV']} mode at #{url}"
@@ -235,6 +253,13 @@ module Yeah
     controller = (data[:controller] if data.is_a?(Hash)) || Controller
     controller.new(env, &blk).render
   end
+
+  # @private
+  def self.run_initializers(initializers)
+    return unless initializers
+    initializers[:any]&.call
+    initializers[ENV['SHELF_ENV'].to_sym]&.call
+  end
 end
 
 extend Yeah
@@ -247,3 +272,5 @@ extend Yeah
 def __main__(args)
   yeah!(args[1..-1])
 end
+
+# rubocop:enable Style/ModuleLength

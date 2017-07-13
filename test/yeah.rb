@@ -152,10 +152,18 @@ end
 
 assert 'Yeah#yeah!' do
   app    = build_app
-  called = false
+  called = any_called = prod_called = dev_called = false
+
+  ENV['SHELF_ENV'] = 'production'
+
+  app.configure { any_called = true }
+  app.configure(:production) { prod_called = true }
 
   app.server.class.define_method(:start) { called = true }
   app.yeah!
 
-  assert_true called
+  assert_true  called
+  assert_true  any_called
+  assert_true  prod_called
+  assert_false dev_called
 end

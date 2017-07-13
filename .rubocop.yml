@@ -20,6 +20,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+AllCops:
+  TargetRubyVersion: 2.3
+
 Documentation:
   Enabled: false
 
@@ -31,3 +34,6 @@ Style/MutableConstant:
 
 Style/NumericPredicate:
   EnforcedStyle: comparison
+
+Style/FrozenStringLiteralComment:
+  Enabled: false

@@ -222,6 +222,51 @@ opt! :version do
 end
 ```
 
+## Configuration
+
+Run once, at startup, in any environment:
+
+```ruby
+configure do
+  # setting one option
+  set :option, 'value'
+  # setting multiple options
+  set a: 1, b: 2
+  # same as `set :option, true`
+  enable :option
+  # same as `set :option, false`
+  disable :option
+end
+```
+
+Run only when the environment (`SHELF_ENV` environment variable) is set to `production`:
+
+```ruby
+configure :production do
+  ...
+end
+```
+
+Run only when the environment is set to either `development` or `test`:
+
+```ruby
+configure :development, :test do
+  ...
+end
+```
+
+You can access those options via `settings`:
+
+```ruby
+configure do
+  set :foo, 'bar'
+end
+
+get '/' do
+  settings[:foo] # => 'bar'
+end
+```
+
 
 ## Shelf Middleware
 
