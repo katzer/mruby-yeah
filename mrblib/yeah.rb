@@ -97,7 +97,7 @@ module Yeah
     if envs.any?
       envs.each { |env| (@initializers ||= {})[env] = blk }
     else
-      @initializers = { any: blk }
+      (@initializers ||= {})[:any] = blk
     end
   end
 
