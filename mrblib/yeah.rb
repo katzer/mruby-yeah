@@ -166,7 +166,8 @@ module Yeah
   #
   # @return [ Void ]
   def document_root(root, opts = {})
-    use Shelf::Static, { root: root, urls: ['/public'] }.merge(opts)
+    config = [Shelf::Static, { root: root, urls: ['/public'] }.merge(opts)]
+    middleware.each_value { |m| m << config }
   end
 
   # Specify where to place the logs.

@@ -136,6 +136,7 @@ end
 
 assert 'Yeah#document_root' do
   app = build_app { document_root '/i/dont/exist' }.app
+  app = Shelf::Server.new.build_app(app)
 
   status, headers, = app.call(env_for('/public/i/dont/exist/app.js'))
   assert_equal 404, status
@@ -144,6 +145,7 @@ end
 
 assert 'Yeah#document_root', 'with opts' do
   app = build_app { document_root '/i/dont/exist', urls: ['/'] }.app
+  app = Shelf::Server.new.build_app(app)
 
   status, headers, = app.call(env_for('/i/dont/exist/app.js'))
   assert_equal 404, status
