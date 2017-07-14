@@ -95,9 +95,9 @@ module Yeah
   # @return [ Void ]
   def configure(*envs, &blk)
     if envs.any?
-      envs.each { |env| (@initializers ||= {})[env] = blk }
+      envs.each { |env| @initializers[env] = blk }
     else
-      (@initializers ||= {})[:any] = blk
+      @initializers[:any] = blk
     end
   end
 
@@ -185,19 +185,16 @@ module Yeah
   # @return [ Void ]
   def yeah!(args = [])
     parser.parse(args) if @parser
-
     return if @dry_run
 
     Yeah.run_initializers(@initializers)
 
     url = "http://#{server.options[:host]}:#{server.options[:port]}"
-
     puts "Starting application in #{ENV['SHELF_ENV']} mode at #{url}"
 
     Yeah.redirect_to_log_folder(*@logs) if @logs
 
-    @parser, @logs = nil
-
+    @parser, @logs, @initializers = nil
     server.start
   end
 
@@ -205,7 +202,8 @@ module Yeah
   #
   # @return [ Void ]
   def _init_yeah!
-    @server = Shelf::Server.new(port: 3000, app: Shelf::Builder.new)
+    @server       = Shelf::Server.new(port: 3000, app: Shelf::Builder.new)
+    @initializers = {}
 
     app.use Shelf::QueryParser
     app.run ->(_) { [200, {}, ['<h1>Yeah!</h1>']] }
@@ -256,7 +254,6 @@ module Yeah
 
   # @private
   def self.run_initializers(initializers)
-    return unless initializers
     initializers[:any]&.call
     initializers[ENV['SHELF_ENV'].to_sym]&.call
   end
