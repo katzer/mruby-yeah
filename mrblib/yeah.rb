@@ -20,8 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-# rubocop:disable Style/ModuleLength
-
 module Yeah
   # Initializes Yeah! once it has been extended to main.
   #
@@ -32,154 +30,7 @@ module Yeah
     obj._init_yeah!
   end
 
-  # Add a flag and a callback to invoke if flag is given later.
-  #
-  # @param [ String ] flag
-  # @param [ Object ] default_value The value to use if nothing else given.
-  # @param [ Proc ] blk
-  #
-  # @return [ Void ]
-  def opt(opt, default_value = nil, &blk)
-    parser.add(opt, default_value, &blk)
-  end
-
-  # Same as `Yeah#opt` however is does exit after the block has been called.
-  #
-  # @return [ Void ]
-  def opt!(opt, default_value = nil)
-    opt(opt, default_value) do |val|
-      if parser.flag_given? opt.to_s
-        puts yield(val)
-        @dry_run = true
-      end
-    end
-  end
-
-  # Store a value referenced by a key.
-  #
-  # @param [ Object ] key The key to reference the value.
-  # @param [ Object ] val The value to store.
-  #
-  # @return [ Void ]
-  def set(key, val = nil)
-    if key.is_a? Hash
-      key.each { |k, v| server.options[k] = v }
-    else
-      server.options[key] = val
-    end
-  end
-
-  # Same as `set :option, true`
-  #
-  # @param [ Object ] key The key to set to true.
-  #
-  # @return [ Void ]
-  def enable(key)
-    set(key, true)
-  end
-
-  # Same as `set :option, false`
-  #
-  # @param [ Object ] key The key to set to false.
-  #
-  # @return [ Void ]
-  def disable(key)
-    set(key, false)
-  end
-
-  # Run at startup in any or for given environment.
-  #
-  # @param [ String ] *envs Optional list of environments.
-  # @param [ Proc ] blk The code to execute at startup.
-  #
-  # @return [ Void ]
-  def configure(*envs, &blk)
-    if envs.any?
-      envs.each { |env| @initializers[env] = blk }
-    else
-      @initializers[:any] = blk
-    end
-  end
-
-  # Delegate to the middleware chain of Shelf.
-  #
-  # @return [ Hash<String, Array> ]
-  def middleware
-    server.middleware
-  end
-
-  # Specifies middleware to use in a stack.
-  #
-  # @param [ Class ] middleware The middleware class.
-  # @param [ Array ] *args Optional arguments used at initialization phase.
-  #
-  # @return [ Void ]
-  def use(middleware, *args)
-    app.use middleware, *args
-  end
-
-  # Add a route to match a request.
-  #
-  # @param [ String ] route The route to add for.
-  # @param [ Int ] method   The HTTP method to match.
-  #                         Defaults to: R3::GET
-  # @param [ Object ] *data Additional data objects.
-  # @param [ Proc ] &blk    Code block to execute for.
-  #
-  # @return [ Void ]
-  def route(route, method = R3::GET, *data, &blk)
-    app.map(route, method, *data) do
-      run ->(env) { Yeah.render(env, &blk) }
-    end
-  end
-
-  # Add a route to match request by a specfic HTTP method.
-  #
-  # @param [ String ] route The route to add for.
-  # @param [ Object ] *data Additional data objects.
-  # @param [ Proc ] &blk    Code block to execute for.
-  #
-  # @return [ Void ]
-  %w[GET POST PUT DELETE PATCH HEAD OPTIONS].each do |method|
-    define_method(method.downcase) do |route, *data, &blk|
-      route(route, R3.method_code_for(method), *data, &blk)
-    end
-  end
-
-  # Specify where to redirect '/'.
-  #
-  # @param [ String ] redirect_to The URL where to redirect to.
-  # @param [ Int ] method The acceptable HTTP method for '/'.
-  #                       Defaults to: 'GET'
-  #
-  # @return [ Void ]
-  def root(url, method = R3::GET)
-    route('/', method) { render redirect: url } unless url == '/'
-  end
-
-  # Add and configure Shelf::Static to serve assets from given root directory.
-  # Default url is /public
-  #
-  # @param [ String ] root Path to the root dir.
-  # @param [ Hash ] opts Additional options accepted by the middleware.
-  #                      Defaults to: { urls: ['/public'] }
-  #
-  # @return [ Void ]
-  def document_root(root, opts = {})
-    config = [Shelf::Static, { root: root, urls: ['/public'] }.merge(opts)]
-    middleware.each_value { |m| m << config }
-  end
-
-  # Specify where to place the logs.
-  #
-  # @param [ String ] dir The path of the log folder.
-  # @param [ String ] out Optional name of the log file.
-  # @param [ String ] err Optional name of the error log file.
-  #
-  # @return [ Void ]
-  def log_folder(dir, out = nil, err = nil)
-    @logs = [dir, out, err]
-  end
+  include Yeah::DSL
 
   # Start the server.
   #
@@ -208,29 +59,6 @@ module Yeah
 
     app.use Shelf::QueryParser
     app.run ->(_) { [200, {}, ['<h1>Yeah!</h1>']] }
-  end
-
-  attr_reader :server
-
-  # The Shelf app builder.
-  #
-  # @return [ Shelf::Builder ]
-  def app
-    server.app
-  end
-
-  # Lazy created opt parser.
-  #
-  # @return [ Yeah::OptParser ]
-  def parser
-    @parser ||= Yeah::OptParser.new
-  end
-
-  # The server settings.
-  #
-  # @return [ Hash ]
-  def settings
-    server.options
   end
 
   # @private
@@ -270,5 +98,3 @@ extend Yeah
 def __main__(args)
   yeah!(args[1..-1])
 end
-
-# rubocop:enable Style/ModuleLength
