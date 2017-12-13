@@ -29,8 +29,8 @@ MRuby::Gem::Specification.new('mruby-yeah') do |spec|
   spec.version = Yeah::VERSION
 
   spec.add_dependency 'mruby-simplehttpserver', mgem: 'mruby-simplehttpserver'
-  spec.add_dependency 'mruby-object-ext', core: 'mruby-object-ext'
-  spec.add_dependency 'mruby-sprintf', core: 'mruby-sprintf'
-  spec.add_dependency 'mruby-print', core: 'mruby-print'
-  spec.add_dependency 'mruby-shelf', mgem: 'mruby-shelf'
+  spec.add_dependency 'mruby-object-ext',       core: 'mruby-object-ext'
+  spec.add_dependency 'mruby-sprintf',          core: 'mruby-sprintf'
+  spec.add_dependency 'mruby-print',            core: 'mruby-print'
+  spec.add_dependency 'mruby-shelf',            mgem: 'mruby-shelf'
 end

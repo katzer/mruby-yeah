@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) Sebastian Katzer 2017
+# Copyright (c) 2017 Sebastian Katzer
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -22,32 +22,31 @@
 
 version: "{build}"
 
-image:
-- Visual Studio 2015
-
 environment:
   global:
-    VCVARSALL: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
+    COMPILER: C:\mingw-w64\x86_64-6.3.0-posix-seh-rt_v5-rev1
     TOOLCHAIN: gcc
   matrix:
   - MRUBY_VERSION: 1.3.0
-    COMPILER: C:\MinGW # MinGW 32-bit 5.3.0
   - MRUBY_VERSION: head
-    COMPILER: C:\MinGW # MinGW 32-bit 5.3.0
 
 matrix:
   allow_failures:
   - MRUBY_VERSION: head
 
 init:
-- CALL "%VCVARSALL%" amd64
-- SET PATH=%COMPILER%\bin;%PATH%
-- SET PATH=C:\Ruby23-x64\bin;%PATH%
-- SET PATH=C:\cygwin\bin;%PATH%
+- git config --global core.autocrlf input
+- reg add "HKLM\SYSTEM\CurrentControlSet\Control\Windows" /f /v ErrorMode /d 2
+- reg add "HKLM\Software\Microsoft\Windows\Windows Error Reporting" /f /v DontShowUI /d 1
+- SET PATH=C:\Windows\system32;C:\Windows;C:\Program Files\Git\cmd;%PATH%
+- SET PATH=%COMPILER%\bin;C:\Ruby24-x64\bin;%PATH%;C:\cygwin\bin;
 - gcc --version
+- ruby --version
 
 build_script:
+- rake mruby
+- DEL /F /Q mruby\build\mrbgems\mruby-io\test
 - rake compile
 
 test_script:
-# - rake test # Tests run fine on local env hover it hangs on ci-appveyor :`(
+- rake test
