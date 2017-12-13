@@ -35,7 +35,6 @@ $ curl 'localhost:3000/hi/Ben'                        |   $ curl 'localhost:8080
 Hi Ben                                                |   Hi Tom and Jerry
 ```
 
-
 ## Installation
 
 Add the line below to your `build_config.rb`:
@@ -55,7 +54,6 @@ MRuby::Gem::Specification.new('your-mrbgem') do |spec|
   spec.add_dependency 'mruby-yeah'
 end
 ```
-
 
 ## Routes
 
@@ -134,7 +132,6 @@ route '/', R3::ANY do
 end
 ```
 
-
 ## Response
 
 Each routing block is invoked within the scope of an instance of `Yeah::Controller`. The class provides access to methods like `request`, `params`, `logger` and `render`.
@@ -182,7 +179,6 @@ get '/say_hello' do               |   def '/' do
 end                               |   end
 ```
 
-
 ## Controller
 
 Instead of a code block to execute a route also accepts an controller and an action similar to Rails.
@@ -196,7 +192,6 @@ end
 
 get 'greet/{name}', controller: GreetingsController, action: 'greet'
 ```
-
 
 ## Command Line Arguments
 
@@ -267,7 +262,6 @@ get '/' do
 end
 ```
 
-
 ## Shelf Middleware
 
 Sinatra rides on [Shelf][shelf], a minimal standard interface for mruby web frameworks. One of Shelf's most interesting capabilities for application developers is support for "middleware" -- components that sit between the server and your application monitoring and/or manipulating the HTTP request/response to provide various types of common functionality.
@@ -291,7 +285,6 @@ use Shelf::Static, urls: ['/public'], root: ENV['DOCUMENT_ROOT']
 
 Shelf is distributed with a variety of standard middleware for logging, debugging, and URL routing. Yeah! uses many of these components automatically based on configuration so you typically don't have to use them explicitly.
 
-
 ## Server
 
 Yeah! works with any Shelf-compatible web server. Right now this is only mruby-simplehttpserver:
@@ -301,7 +294,6 @@ set :server, 'simplehttpserver' # => Default
 ```
 
 However its possible to register handlers for other servers. See [here][server] for more info.
-
 
 ## Good to know
 
@@ -337,11 +329,19 @@ Run the tests:
 
     $ rake test
 
+## Contributing
+
+Bug reports and pull requests are welcome on GitHub at https://github.com/katzer/mruby-yeah.
+
+1. Fork it
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create new Pull Request
 
 ## Authors
 
 - Sebastián Katzer, Fa. appPlant GmbH
-
 
 ## License
 
@@ -350,7 +350,6 @@ The mgem is available as open source under the terms of the [MIT License][licens
 Made with :yum: from Leipzig
 
 © 2017 [appPlant GmbH][appplant]
-
 
 [shelf]: https://github.com/katzer/mruby-shelf
 [mruby]: https://github.com/mruby/mruby
