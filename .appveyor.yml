@@ -27,7 +27,7 @@ environment:
     COMPILER: C:\mingw-w64\x86_64-6.3.0-posix-seh-rt_v5-rev1
     TOOLCHAIN: gcc
   matrix:
-  - MRUBY_VERSION: 1.3.0
+  - MRUBY_VERSION: 1.4.0
   - MRUBY_VERSION: head
 
 matrix:
@@ -35,16 +35,13 @@ matrix:
   - MRUBY_VERSION: head
 
 init:
-- git config --global core.autocrlf input
-- reg add "HKLM\SYSTEM\CurrentControlSet\Control\Windows" /f /v ErrorMode /d 2
-- reg add "HKLM\Software\Microsoft\Windows\Windows Error Reporting" /f /v DontShowUI /d 1
 - SET PATH=C:\Windows\system32;C:\Windows;C:\Program Files\Git\cmd;%PATH%
-- SET PATH=%COMPILER%\bin;C:\Ruby24-x64\bin;%PATH%;C:\cygwin\bin;
+- SET PATH=%COMPILER%\bin;C:\Ruby25-x64\bin;%PATH%;C:\cygwin\bin;
 - gcc --version
+- ruby --version
 
 build_script:
 - rake mruby
-- DEL /F /Q mruby\build\mrbgems\mruby-io\test\file.rb
 - DEL /F /Q mruby\build\mrbgems\mruby-socket\test
 - rake compile
 
