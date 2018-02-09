@@ -119,6 +119,7 @@ module Yeah
     #
     # @return [ Void ]
     def route(route, method = R3::GET, *data, &blk)
+      routes << "#{R3.method_name(method)} #{route}"
       app.map(route, method, *data) do
         run ->(env) { Yeah.render(env, &blk) }
       end
@@ -133,7 +134,7 @@ module Yeah
     # @return [ Void ]
     %w[GET POST PUT DELETE PATCH HEAD OPTIONS].each do |method|
       define_method(method.downcase) do |route, *data, &blk|
-        route(route, R3.method_code_for(method), *data, &blk)
+        route(route, R3.method_code(method), *data, &blk)
       end
     end
 
@@ -193,6 +194,13 @@ module Yeah
     # @return [ Hash ]
     def settings
       server.options
+    end
+
+    # All registered routes with leading method.
+    #
+    # @return [ Array<String> ]
+    def routes
+      @routes ||= []
     end
   end
 end

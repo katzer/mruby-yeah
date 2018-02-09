@@ -132,6 +132,12 @@ route '/', R3::ANY do
 end
 ```
 
+Last but not least its possible to get a list of all added HTTP routes:
+
+```ruby
+routes # => ['GET /blog/post/{id}']
+```
+
 ## Response
 
 Each routing block is invoked within the scope of an instance of `Yeah::Controller`. The class provides access to methods like `request`, `params`, `logger` and `render`.

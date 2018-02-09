@@ -104,6 +104,14 @@ assert 'Yeah#route' do
   assert_equal 200, app.call(env_for('/test', 'POST'))[0]
 end
 
+assert 'Yeah#routes' do
+  app = build_app { get('/ok') { 'OK' } }
+
+  assert_kind_of Array, app.routes
+  assert_false app.routes.empty?
+  assert_equal 'GET /ok', app.routes.last
+end
+
 assert 'Yeah', 'http method helpers' do
   app = build_app { post('/test') { 'OK' } }
 
