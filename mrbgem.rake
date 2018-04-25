@@ -20,17 +20,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require_relative 'mrblib/yeah/version'
-
 MRuby::Gem::Specification.new('mruby-yeah') do |spec|
   spec.license = 'MIT'
   spec.authors = 'Sebastian Katzer'
   spec.summary = 'mruby on tiny rails'
-  spec.version = Yeah::VERSION
 
   spec.add_dependency 'mruby-simplehttpserver', mgem: 'mruby-simplehttpserver'
+  spec.add_dependency 'mruby-tiny-opt-parser',  mgem: 'mruby-tiny-opt-parser'
   spec.add_dependency 'mruby-object-ext',       core: 'mruby-object-ext'
   spec.add_dependency 'mruby-sprintf',          core: 'mruby-sprintf'
   spec.add_dependency 'mruby-print',            core: 'mruby-print'
   spec.add_dependency 'mruby-shelf',            mgem: 'mruby-shelf'
+  spec.add_dependency 'mruby-exit',             core: 'mruby-exit'
 end

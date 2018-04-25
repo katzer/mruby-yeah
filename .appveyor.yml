@@ -35,14 +35,15 @@ matrix:
   - MRUBY_VERSION: head
 
 init:
-- SET PATH=C:\Windows\system32;C:\Windows;C:\Program Files\Git\cmd;%PATH%
-- SET PATH=%COMPILER%\bin;C:\Ruby25-x64\bin;%PATH%;C:\cygwin\bin;
+- SET PATH=%COMPILER%\bin;C:\Ruby25-x64\bin;%PATH%;C:\cygwin64\bin
 - gcc --version
 - ruby --version
 
 build_script:
 - rake mruby
-- DEL /F /Q mruby\build\mrbgems\mruby-socket\test
+- DEL /F /Q mruby\mrbgems\mruby-io\test
+- DEL /F /Q mruby\mrbgems\mruby-socket\test
+- DEL /F /Q mruby\build\mrbgems\mruby-simplehttpserver\test
 - rake compile
 
 test_script:

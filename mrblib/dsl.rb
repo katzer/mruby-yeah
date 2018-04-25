@@ -25,25 +25,22 @@ module Yeah
   module DSL
     # Add a flag and a callback to invoke if flag is given later.
     #
-    # @param [ String ] flag
-    # @param [ Object ] default_value The value to use if nothing else given.
-    # @param [ Proc ] blk
+    # @param [ String ] flag The name of the option value.
+    #                        Possible values: object, string, int, float, bool
+    # @param [ Symbol ] type The type of the option v
+    # @param [ Object ] dval The value to use if nothing else given.
+    # @param [ Proc ]   blk  The callback to be invoked.
     #
     # @return [ Void ]
-    def opt(opt, default_value = nil, &blk)
-      parser.add(opt, default_value, &blk)
+    def on(opt, type = :object, dval = nil, &blk)
+      parser.on(opt, type, dval, &blk)
     end
 
     # Same as `Yeah#opt` however is does exit after the block has been called.
     #
     # @return [ Void ]
-    def opt!(opt, default_value = nil)
-      opt(opt, default_value) do |val|
-        if parser.flag_given? opt.to_s
-          puts yield(val)
-          @dry_run = true
-        end
-      end
+    def on!(opt, type = :object, dval = nil, &blk)
+      parser.on!(opt, type, dval, &blk)
     end
 
     # Store a value referenced by a key.
@@ -173,6 +170,9 @@ module Yeah
       @logs = [dir, out, err]
     end
 
+    # The instance of the server which is wraped by a (custom) handler.
+    #
+    # @return [ Shelf::Server ]
     attr_reader :server
 
     # The Shelf app builder.
@@ -186,7 +186,7 @@ module Yeah
     #
     # @return [ Yeah::OptParser ]
     def parser
-      @parser ||= Yeah::OptParser.new
+      @parser ||= OptParser.new
     end
 
     # The server settings.

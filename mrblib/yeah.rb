@@ -37,7 +37,6 @@ module Yeah
   # @return [ Void ]
   def yeah!(args = [])
     parser.parse(args) if @parser
-    return if @dry_run
 
     Yeah.run_initializers(@initializers)
 
@@ -88,7 +87,7 @@ module Yeah
   end
 end
 
-extend Yeah
+module Kernel; extend Yeah end
 
 # Default entry point to mruby-cli generated apps to run Yeah!
 #
