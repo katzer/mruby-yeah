@@ -40,7 +40,7 @@ module Yeah
 
     Yeah.run_initializers(@initializers)
 
-    url = "http://#{server.options[:host]}:#{server.options[:port]}"
+    url = "http://#{settings[:host]}:#{settings[:port]}"
     puts "Starting application in #{ENV['SHELF_ENV']} mode at #{url}"
 
     Yeah.redirect_to_log_folder(*@logs) if @logs
