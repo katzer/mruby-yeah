@@ -46,9 +46,9 @@ assert 'Yeah#server' do
   assert_kind_of Shelf::Server, build_app.server
 end
 
-assert 'Yeah#on' do
+assert 'Yeah#opt' do
   called = false
-  app    = build_app { on(:port, :int, 1) { called = true } }
+  app    = build_app { opt(:port, :int, 1) { called = true } }
 
   assert_true app.parser.valid_flag?('port')
   assert_equal({ port: 1 }, app.parser.parse)

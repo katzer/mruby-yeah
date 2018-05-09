@@ -32,14 +32,14 @@ module Yeah
     # @param [ Proc ]   blk  The callback to be invoked.
     #
     # @return [ Void ]
-    def on(opt, type = :object, dval = nil, &blk)
+    def opt(opt, type = :object, dval = nil, &blk)
       parser.on(opt, type, dval, &blk)
     end
 
     # Same as `Yeah#opt` however is does exit after the block has been called.
     #
     # @return [ Void ]
-    def on!(opt, type = :object, dval = nil, &blk)
+    def opt!(opt, type = :object, dval = nil, &blk)
       parser.on!(opt, type, dval, &blk)
     end
 
