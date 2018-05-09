@@ -87,7 +87,7 @@ module Yeah
   end
 end
 
-module Kernel; extend Yeah end
+extend Yeah # rubocop:disable Style/MixinUsage
 
 # Default entry point to mruby-cli generated apps to run Yeah!
 #
