@@ -205,7 +205,7 @@ Yeah! ships with a small opt parser. Each option is associated with a block:
 
 ```ruby
 # matches "your-mrbgem --port 80" or "your-mrbgem -p 80"
-opt :port, 8080 do |port|
+opt :port, :int, 8080 do |port|
   # port is 80
   set :port, port
 end
