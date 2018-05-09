@@ -33,14 +33,22 @@ module Yeah
     #
     # @return [ Void ]
     def opt(opt, type = :object, dval = nil, &blk)
-      parser.on(opt, type, dval, &blk)
+      if dval.nil? && !type.is_a?(Symbol)
+        parser.on(opt, :object, type, &blk)
+      else
+        parser.on(opt, type, dval, &blk)
+      end
     end
 
     # Same as `Yeah#opt` however is does exit after the block has been called.
     #
     # @return [ Void ]
     def opt!(opt, type = :object, dval = nil, &blk)
-      parser.on!(opt, type, dval, &blk)
+      if dval.nil? && !type.is_a?(Symbol)
+        parser.on!(opt, :object, type, &blk)
+      else
+        parser.on!(opt, type, dval, &blk)
+      end
     end
 
     # Store a value referenced by a key.

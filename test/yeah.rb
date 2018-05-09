@@ -53,6 +53,13 @@ assert 'Yeah#opt' do
   assert_true app.parser.valid_flag?('port')
   assert_equal({ port: 1 }, app.parser.parse)
   assert_true called
+
+  called = false
+  app    = build_app { opt(:port, 1) { called = true } }
+
+  assert_true app.parser.valid_flag?('port')
+  assert_equal({ port: 1 }, app.parser.parse)
+  assert_true called
 end
 
 assert 'Yeah#set', 'single key-value pair' do
