@@ -51,9 +51,9 @@ module Yeah
     # @return [ Void ]
     def set(key, val = nil)
       if key.is_a? Hash
-        key.each { |k, v| server.options[k] = v }
+        key.each { |k, v| settings[k] = v }
       else
-        server.options[key] = val
+        settings[key] = val
       end
     end
 
