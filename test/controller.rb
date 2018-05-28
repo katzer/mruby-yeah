@@ -106,9 +106,17 @@ assert 'Yeah::Controller#logger' do
   assert_equal ['Logger'], app.call(env_for('/log'))[2]
 end
 
-assert 'Yeah::Controller', 'controller+action' do
+assert 'Yeah::Controller', 'controller:class, action:name' do
   app = build_app do
     get '/say_hello/{name}', controller: MyController, action: 'say_hello'
+  end
+
+  assert_equal ['Hello Ben'], app.call(env_for('/say_hello/ben'))[2]
+end
+
+assert 'Yeah::Controller', "to: 'controller#action'" do
+  app = build_app do
+    get '/say_hello/{name}', to: 'MyController#say_hello'
   end
 
   assert_equal ['Hello Ben'], app.call(env_for('/say_hello/ben'))[2]

@@ -76,6 +76,13 @@ module Yeah
   # @private
   def self.render(env, &blk)
     data = env[Shelf::SHELF_R3_DATA]
+
+    if data.is_a?(Hash) && data.include?(:to)
+      name, action      = data[:to].split('#')
+      data[:controller] = Object.const_get(name)
+      data[:action]     = action
+    end
+
     controller = (data[:controller] if data.is_a?(Hash)) || Controller
     controller.new(env, &blk).render
   end
