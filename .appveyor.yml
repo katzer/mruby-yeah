@@ -27,7 +27,7 @@ environment:
     COMPILER: C:\mingw-w64\x86_64-6.3.0-posix-seh-rt_v5-rev1
     TOOLCHAIN: gcc
   matrix:
-  - MRUBY_VERSION: 1.4.1
+  - MRUBY_VERSION: stable
   - MRUBY_VERSION: head
 
 matrix:
