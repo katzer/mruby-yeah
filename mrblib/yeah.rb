@@ -78,7 +78,9 @@ module Yeah
     data = env[Shelf::SHELF_R3_DATA]
 
     if data.is_a?(Hash) && data.include?(:to)
-      name, action      = data[:to].split('#')
+      name, action = data[:to].split('#')
+      name = "#{name.capitalize}Controller" unless name.end_with? 'Controller'
+
       data[:controller] = Object.const_get(name)
       data[:action]     = action
     end

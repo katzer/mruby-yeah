@@ -120,4 +120,10 @@ assert 'Yeah::Controller', "to: 'controller#action'" do
   end
 
   assert_equal ['Hello Ben'], app.call(env_for('/say_hello/ben'))[2]
+
+  app = build_app do
+    get '/say_hello/{name}', to: 'my#say_hello'
+  end
+
+  assert_equal ['Hello Ben'], app.call(env_for('/say_hello/ben'))[2]
 end
