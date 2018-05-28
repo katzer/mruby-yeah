@@ -24,8 +24,11 @@ ENV['MRUBY_CONFIG']  ||= File.expand_path('build_config.rb')
 ENV['MRUBY_VERSION'] ||= 'head'
 
 file :mruby do
-  if ENV['MRUBY_VERSION'] == 'head'
+  case ENV['MRUBY_VERSION']&.downcase
+  when 'head'
     sh 'git clone --depth 1 git://github.com/mruby/mruby.git'
+  when 'stable'
+    sh 'git clone --depth 1 git://github.com/mruby/mruby.git -b stable'
   else
     sh "curl -L --fail --retry 3 --retry-delay 1 https://github.com/mruby/mruby/archive/#{ENV['MRUBY_VERSION']}.tar.gz -s -o - | tar zxf -" # rubocop:disable LineLength
     mv "mruby-#{ENV['MRUBY_VERSION']}", 'mruby'
