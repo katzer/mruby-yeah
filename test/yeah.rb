@@ -158,6 +158,15 @@ assert 'Yeah#root' do
   assert_equal 405, status
 end
 
+assert 'Yeah#redirect' do
+  app = build_app { redirect '/' => '/index.html' }.app
+  app = Shelf::Server.new.build_app(app)
+
+  status, headers, = app.call(env_for('/'))
+  assert_equal 303, status
+  assert_equal '/index.html', headers['Location']
+end
+
 assert 'Yeah#document_root' do
   app = build_app { document_root '/i/dont/exist' }.app
   app = Shelf::Server.new.build_app(app)

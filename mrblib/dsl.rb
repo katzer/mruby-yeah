@@ -154,6 +154,15 @@ module Yeah
       route('/', method) { render redirect: url } unless url == '/'
     end
 
+    # Add redirect from one URL to another one.
+    #
+    # @param [ Hash<String, String> ] pairs { url => redirect_to_url }
+    #
+    # @return [ Void ]
+    def redirect(pairs)
+      pairs.each { |url, to| get(url) { render redirect: to } }
+    end
+
     # Add and configure Shelf::Static to serve assets from given root directory.
     # Default url is /public
     #
