@@ -39,7 +39,7 @@ module Yeah
         res = instance_exec(*args, &blk)
       else
         data = env[Shelf::SHELF_R3_DATA]
-        send(data[:action], *args)
+        send(data[:action]&.to_s || 'index', *args)
       end
 
       @body = res unless @res
