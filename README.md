@@ -116,7 +116,7 @@ end
 Route matching with Regular Expressions:
 
 ```ruby
-get '/blog/post/{id:\\d+}' |id|
+get '/blog/post/{id:\\d+}' do |id|
   post = Post.find(id)
 end
 ```
@@ -180,7 +180,7 @@ get '/say_hi' do                  |   post '/api/stats' do
   render 'Hi'                     |     render json: Stats.create(params), status: 201, headers: {...}
 end                               |   end
                                   |
-get '/say_hello' do               |   def '/' do
+get '/say_hello' do               |   get '/' do
   'Hello'                         |     render redirect: 'public/index.html'
 end                               |   end
 ```
