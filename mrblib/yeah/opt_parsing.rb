@@ -40,7 +40,10 @@ module Yeah
     #
     # @return [ Void ]
     def draw(&block)
-      Class.new { include DSL::OptParsing }.new.instance_eval(&block)
+      Class.new do
+        include DSL::OptParsing
+        include DSL::Configurable
+      end.new.instance_eval(&block)
     end
   end
 end
