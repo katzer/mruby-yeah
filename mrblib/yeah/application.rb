@@ -32,11 +32,6 @@ module Yeah
     # @return [ Shelf::Server ]
     attr_reader :server
 
-    # Application specific config settings
-    #
-    # @return [ Hash ]
-    attr_reader :config
-
     # The server settings.
     #
     # @return [ Hash ]
@@ -113,7 +108,6 @@ module Yeah
     # @return [ Void ]
     def initialize(cfg = {})
       @server       = Shelf::Server.new({ port: 3000, app: Shelf::Builder.new }.merge(cfg))
-      @config       = {}
       @initializers = {}
 
       app.use Shelf::QueryParser

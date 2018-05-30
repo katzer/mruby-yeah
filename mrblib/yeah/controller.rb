@@ -45,13 +45,6 @@ module Yeah
       @body = res unless @res
     end
 
-    # The application config.
-    #
-    # @return [ Hash ]
-    def config
-      Yeah.application.config
-    end
-
     # The Shelf request object.
     #
     # @return [ Hash ]
