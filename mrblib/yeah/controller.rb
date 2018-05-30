@@ -30,19 +30,26 @@ module Yeah
     #
     # @return [ Void ]
     def initialize(env, &blk)
-      @env  = env
+      @env = env
 
-      args  = []
+      args = []
       params.each { |key, val| args << val if key.is_a? Symbol }
 
       if blk
         res = instance_exec(*args, &blk)
       else
-        data = env[Shelf::SHELF_R3_DATA]
-        send(data[:action]&.to_s || 'index', *args)
+        dat = env[Shelf::SHELF_R3_DATA]
+        send(dat[:action]&.to_s || 'index', *args)
       end
 
       @body = res unless @res
+    end
+
+    # The application config.
+    #
+    # @return [ Hash ]
+    def config
+      Yeah.application.config
     end
 
     # The Shelf request object.
@@ -97,7 +104,7 @@ module Yeah
 
       if opts.include? :redirect
         status = 303
-        headers[Shelf::LOCATION] = opts[:redirect]
+        headers['Location'] = opts[:redirect]
       else
         body, type = self.class.render_body(status, @body, opts)
         headers[Shelf::CONTENT_TYPE]   = type

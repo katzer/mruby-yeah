@@ -20,6 +20,8 @@ __Yeah!__ is a DSL for quickly creating [shelf applications][shelf] in [mruby][m
 ```ruby
 # mrblib/your-mrbgem.rb
 
+extend Yeah::DSL                                      |   extend Yeah::DSL
+                                                      |
 set port: 3000                                        |   opt(:port) { |port| set port: port }
                                                       |
 get '/hi/{name}' do |name|                            |   get '/hi' do
@@ -196,7 +198,15 @@ class GreetingsController < Yeah::Controller
   end
 end
 
-get 'greet/{name}', controller: GreetingsController, action: 'greet'
+Yeah.application.routes.draw do
+  get 'greet/{name}', to: 'greetings#greet'
+end
+
+Yeah.application.configure :production do
+  log_folder '/logs', 'iss.log', 'iss.err'
+end
+
+Yeah.application.run! port: 3000
 ```
 
 ## Command Line Arguments
@@ -300,26 +310,6 @@ set :server, 'simplehttpserver' # => Default
 ```
 
 However its possible to register handlers for other servers. See [here][server] for more info.
-
-## Good to know
-
-By default Yeah! extends _Object_ and works out-of-the-box for mruby-cli projects. However often it might be necessary to start Yeah! manually:
-
-```ruby
-class App
-  include Yeah
-
-  opt :port { |port| set :port, port }
-
-  get '/' { 'It Works!' }
-
-  def initialize
-    _init_yeah!
-  end
-end
-
-App.new.yeah! ['-p', 8080]
-```
 
 ## Development
 

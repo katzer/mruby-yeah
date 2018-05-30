@@ -20,11 +20,24 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-assert 'Yeah' do
-  assert_kind_of Module, Yeah
-end
+module Yeah::DSL
+  # DSL methods to customize the server middleware.
+  module Middleware
+    # Specifies middleware to use in a stack.
+    #
+    # @param [ Class ] middleware The middleware class.
+    # @param [ Array ] *args Optional arguments used at initialization phase.
+    #
+    # @return [ Void ]
+    def use(middleware, *args)
+      Yeah.application.app.use middleware, *args
+    end
 
-assert 'Yeah.application' do
-  assert_kind_of Yeah::Application, Yeah.application
-  assert_equal   Yeah.application,  Yeah.application
+    # Delegate to the middleware chain of Shelf.
+    #
+    # @return [ Hash<String, Array> ]
+    def middleware
+      Yeah.application.server.middleware
+    end
+  end
 end

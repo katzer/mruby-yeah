@@ -20,11 +20,28 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-assert 'Yeah' do
-  assert_kind_of Module, Yeah
-end
+module Yeah
+  # Yeah.application.router.draw do
+  #   get 'test', to: 'controller#action'
+  # end
+  class Routing
+    # Invokes the code block in the context of an anonymus class.
+    #
+    # @param [ Proc ] block The code to execute.
+    #
+    # @return [ Void ]
+    def draw(&block)
+      Class.new { include DSL::Routing }.new.instance_eval(&block)
+      routes.freeze
+    end
 
-assert 'Yeah.application' do
-  assert_kind_of Yeah::Application, Yeah.application
-  assert_equal   Yeah.application,  Yeah.application
+    protected
+
+    # All registered routes with leading method.
+    #
+    # @return [ Array<String> ]
+    def routes
+      @routes ||= []
+    end
+  end
 end

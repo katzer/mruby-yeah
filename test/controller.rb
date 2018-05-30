@@ -25,9 +25,10 @@ def env_for(path, query = '')
 end
 
 def build_app(&blk)
-  app = Object.new.extend Yeah
-  app.instance_eval(&blk) if blk
-  app.app
+  Object.new.extend(Yeah::DSL).instance_eval(&blk) if blk
+  Yeah.application.app
+ensure
+  Yeah.application = nil
 end
 
 class FooYeah

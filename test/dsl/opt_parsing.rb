@@ -20,11 +20,33 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-assert 'Yeah' do
-  assert_kind_of Module, Yeah
+def env_for(path, method = 'GET')
+  { 'REQUEST_METHOD' => method, 'PATH_INFO' => path }
 end
 
-assert 'Yeah.application' do
-  assert_kind_of Yeah::Application, Yeah.application
-  assert_equal   Yeah.application,  Yeah.application
+def build_app(&blk)
+  Object.new.extend(Yeah::DSL::OptParsing).instance_eval(&blk) if blk
+  Yeah.application.opts.parser
+ensure
+  Yeah.application = nil
+end
+
+assert 'Yeah::DSL::OptParsing' do
+  assert_kind_of Module, Yeah::DSL::OptParsing
+end
+
+assert 'Yeah#opt' do
+  called = false
+  parser = build_app { opt(:port, :int, 1) { called = true } }
+
+  assert_true parser.valid_flag?('port')
+  assert_equal({ port: 1 }, parser.parse)
+  assert_true called
+
+  called = false
+  parser = build_app { opt(:port, 1) { called = true } }
+
+  assert_true parser.valid_flag?('port')
+  assert_equal({ port: 1 }, parser.parse)
+  assert_true called
 end

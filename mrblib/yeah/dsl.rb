@@ -20,11 +20,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-assert 'Yeah' do
-  assert_kind_of Module, Yeah
-end
-
-assert 'Yeah.application' do
-  assert_kind_of Yeah::Application, Yeah.application
-  assert_equal   Yeah.application,  Yeah.application
+module Yeah
+  # DSL methods that are available from top level
+  module DSL
+    include Configurable
+    include Middleware
+    include OptParsing
+    include Routing
+  end
 end

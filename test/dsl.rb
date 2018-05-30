@@ -20,11 +20,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-assert 'Yeah' do
-  assert_kind_of Module, Yeah
-end
-
-assert 'Yeah.application' do
-  assert_kind_of Yeah::Application, Yeah.application
-  assert_equal   Yeah.application,  Yeah.application
+assert 'Yeah::DSL' do
+  assert_kind_of Module, Yeah::DSL
+  assert_include Yeah::DSL, Yeah::DSL::Configurable
+  assert_include Yeah::DSL, Yeah::DSL::Middleware
+  assert_include Yeah::DSL, Yeah::DSL::OptParsing
+  assert_include Yeah::DSL, Yeah::DSL::Routing
 end

@@ -20,11 +20,27 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-assert 'Yeah' do
-  assert_kind_of Module, Yeah
-end
+module Yeah
+  # Yeah.application.opts.draw do
+  #   opt :port, :int, 5
+  # end
+  class OptParsing
+    # Lazy created opt parser.
+    #
+    # @return [ Yeah::OptParser ]
+    def parser
+      @parser ||= ::OptParser.new
+    rescue NameError
+      raise NameError, 'Missing mruby-tiny-opt-parser mgem'
+    end
 
-assert 'Yeah.application' do
-  assert_kind_of Yeah::Application, Yeah.application
-  assert_equal   Yeah.application,  Yeah.application
+    # Invokes the code block in the context of an anonymus class.
+    #
+    # @param [ Proc ] block The code to execute.
+    #
+    # @return [ Void ]
+    def draw(&block)
+      Class.new { include DSL::OptParsing }.new.instance_eval(&block)
+    end
+  end
 end

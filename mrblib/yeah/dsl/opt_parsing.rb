@@ -20,27 +20,35 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-module Yeah
-  class << self
-    # Getter for the default Yeah app.
+module Yeah::DSL
+  # DSL methods related to command-line parsing.
+  module OptParsing
+    # Add a flag and a callback to invoke if flag is given later.
     #
-    # @return [ Yeah::Application ]
-    def application
-      @application ||= Application.new
-    end
-
-    # Setter for the default Yeah app
+    # @param [ String ] flag The name of the option value.
+    #                        Possible values: object, string, int, float, bool
+    # @param [ Symbol ] type The type of the option v
+    # @param [ Object ] dval The value to use if nothing else given.
+    # @param [ Proc ]   blk  The callback to be invoked.
     #
     # @return [ Void ]
-    attr_writer :application
-  end
-end
+    def opt(opt, type = :object, dval = nil, &blk)
+      if dval.nil? && !type.is_a?(Symbol)
+        Yeah.application.opts.parser.on(opt, :object, type, &blk)
+      else
+        Yeah.application.opts.parser.on(opt, type, dval, &blk)
+      end
+    end
 
-# Default entry point to mruby-cli generated apps to run Yeah!
-#
-# @param [ Array<String> ] args ARGV
-#
-# @return [ Void ]
-def __main__(args)
-  Yeah.application.run! args[1..-1]
+    # Same as `Yeah#opt` however is does exit after the block has been called.
+    #
+    # @return [ Void ]
+    def opt!(opt, type = :object, dval = nil, &blk)
+      if dval.nil? && !type.is_a?(Symbol)
+        Yeah.application.opts.parser.on!(opt, :object, type, &blk)
+      else
+        Yeah.application.opts.parser.on!(opt, type, dval, &blk)
+      end
+    end
+  end
 end
