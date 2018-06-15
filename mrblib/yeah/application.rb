@@ -93,9 +93,9 @@ module Yeah
       url = "http://#{settings[:host]}:#{settings[:port]}"
       puts "Starting application in #{ENV['SHELF_ENV']} mode at #{url}"
 
+      initialize!
       redirect_to_log_folder(*@logs) if @logs
 
-      initialize!
       server.start
     end
 
