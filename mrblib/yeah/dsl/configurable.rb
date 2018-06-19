@@ -42,8 +42,8 @@ module Yeah::DSL
     # @param [ Object ] key The key to set to true.
     #
     # @return [ Void ]
-    def enable(key)
-      set(key, true)
+    def enable(*keys)
+      keys.each { |key| set(key, true) }
     end
 
     # Same as `set :option, false`
@@ -51,8 +51,8 @@ module Yeah::DSL
     # @param [ Object ] key The key to set to false.
     #
     # @return [ Void ]
-    def disable(key)
-      set(key, false)
+    def disable(*keys)
+      keys.each { |key| set(key, false) }
     end
 
     # Run at startup in any or for given environment.
