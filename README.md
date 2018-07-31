@@ -280,7 +280,7 @@ end
 
 ## Shelf Middleware
 
-Sinatra rides on [Shelf][shelf], a minimal standard interface for mruby web frameworks. One of Shelf's most interesting capabilities for application developers is support for "middleware" -- components that sit between the server and your application monitoring and/or manipulating the HTTP request/response to provide various types of common functionality.
+Yeah! rides on [Shelf][shelf], a minimal standard interface for mruby web frameworks. One of Shelf's most interesting capabilities for application developers is support for "middleware" -- components that sit between the server and your application monitoring and/or manipulating the HTTP request/response to provide various types of common functionality.
 
 Sinatra makes building Rack middleware pipelines a cinch via a top-level `use` method:
 
