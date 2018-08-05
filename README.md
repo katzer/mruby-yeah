@@ -303,7 +303,7 @@ Shelf is distributed with a variety of standard middleware for logging, debuggin
 
 ## Server
 
-Yeah! works with any Shelf-compatible web server. Right now this is only mruby-simplehttpserver:
+Yeah! works with any Shelf-compatible web server. Right now these are _mruby-simplehttpserver_ and _mruby-heeler_:
 
 ```ruby
 set :server, 'simplehttpserver' # => Default
