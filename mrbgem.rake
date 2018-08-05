@@ -25,12 +25,12 @@ MRuby::Gem::Specification.new('mruby-yeah') do |spec|
   spec.authors = 'Sebastian Katzer'
   spec.summary = 'mruby on tiny rails'
 
-  spec.add_dependency 'mruby-simplehttpserver', mgem: 'mruby-simplehttpserver'
-  spec.add_dependency 'mruby-object-ext',       core: 'mruby-object-ext'
-  spec.add_dependency 'mruby-sprintf',          core: 'mruby-sprintf'
-  spec.add_dependency 'mruby-print',            core: 'mruby-print'
-  spec.add_dependency 'mruby-shelf',            mgem: 'mruby-shelf'
-  spec.add_dependency 'mruby-exit',             core: 'mruby-exit'
+  spec.add_dependency 'mruby-object-ext', core: 'mruby-object-ext'
+  spec.add_dependency 'mruby-sprintf',    core: 'mruby-sprintf'
+  spec.add_dependency 'mruby-print',      core: 'mruby-print'
+  spec.add_dependency 'mruby-exit',       core: 'mruby-exit'
+  spec.add_dependency 'mruby-shelf',      mgem: 'mruby-shelf'
+  spec.add_dependency 'mruby-heeler',     mgem: 'mruby-heeler'
 
   spec.add_test_dependency 'mruby-tiny-opt-parser', mgem: 'mruby-tiny-opt-parser'
 

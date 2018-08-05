@@ -107,8 +107,10 @@ module Yeah
     #
     # @return [ Void ]
     def initialize(cfg = {})
-      @server       = Shelf::Server.new({ port: 3000, app: Shelf::Builder.new }.merge(cfg))
       @initializers = {}
+      @server       = Shelf::Server.new({
+        server: 'heeler', port: 3000, app: Shelf::Builder.new
+      }.merge(cfg))
 
       app.use Shelf::QueryParser
       app.run ->(_) { [200, {}, ['<h1>Yeah!</h1>']] }
