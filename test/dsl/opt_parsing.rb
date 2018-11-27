@@ -40,13 +40,13 @@ assert 'Yeah#opt' do
   parser = build_app { opt(:port, :int, 1) { called = true } }
 
   assert_true parser.valid_flag?('port')
-  assert_equal({ port: 1 }, parser.parse)
+  assert_equal({ port: 1 }, parser.parse([]))
   assert_true called
 
   called = false
   parser = build_app { opt(:port, 1) { called = true } }
 
   assert_true parser.valid_flag?('port')
-  assert_equal({ port: 1 }, parser.parse)
+  assert_equal({ port: 1 }, parser.parse([]))
   assert_true called
 end

@@ -44,7 +44,7 @@ assert 'Yeah::Application#opts' do
 
   app.opts.draw { opt(:port, :int, 80) }
 
-  assert_equal({ port: 80 }, app.opts.parser.parse)
+  assert_equal({ port: 80 }, app.opts.parser.parse([]))
 ensure
   Yeah.application = nil
 end
