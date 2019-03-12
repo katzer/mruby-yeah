@@ -157,7 +157,7 @@ end
 ```ruby
 # "GET /blogs/b1/posts/p1?blog_id=b2"
 get '/blogs/{blog_id}/posts/{post_id}' do
-  params # => { 'blog_id' => 'b2', blog_id: 'b1', post_id: 'p1' }
+  params # => { blog_id: 'b1', post_id: 'p1' }
 end
 ```
 
