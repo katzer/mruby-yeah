@@ -4,8 +4,8 @@
 </p>
 
 <p align="center">
-    <a href="https://travis-ci.org/katzer/mruby-yeah">
-        <img src="https://travis-ci.org/katzer/mruby-yeah.svg?branch=master" alt="Build Status" />
+    <a href="https://travis-ci.com/katzer/mruby-yeah">
+        <img src="https://travis-ci.com/katzer/mruby-yeah.svg?branch=master" alt="Build Status" />
     </a>
     <a href="https://codebeat.co/projects/github-com-katzer-mruby-yeah-master">
         <img src="https://codebeat.co/badges/828229e5-c07a-4fc6-ba2a-7afc824685c5" alt="codebeat badge" />
@@ -343,7 +343,7 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/katzer
 
 The mgem is available as open source under the terms of the [MIT License][license].
 
-Made with :yum: from Leipzig
+Made with :yum: in Leipzig
 
 © 2017 [appPlant GmbH][appplant]
 
