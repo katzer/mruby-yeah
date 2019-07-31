@@ -24,7 +24,7 @@ image: Visual Studio 2017
 
 environment:
   global:
-    COMPILER: C:\mingw-w64\x86_64-7.2.0-posix-seh-rt_v5-rev1\mingw64
+    COMPILER: C:\mingw-w64\x86_64-8.1.0-posix-seh-rt_v6-rev0\mingw64
     TOOLCHAIN: gcc
   matrix:
   - MRUBY_VERSION: stable
@@ -35,7 +35,7 @@ matrix:
   - MRUBY_VERSION: head
 
 init:
-- SET PATH=%COMPILER%\bin;C:\Ruby25-x64\bin;%PATH%;C:\cygwin64\bin
+- SET PATH=%COMPILER%\bin;C:\Ruby26-x64\bin;%PATH%;C:\cygwin64\bin
 - gcc --version
 
 build_script:
