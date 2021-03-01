@@ -24,7 +24,7 @@ ENV['MRUBY_CONFIG']  ||= File.expand_path('build_config.rb')
 ENV['MRUBY_VERSION'] ||= 'stable'
 
 file :mruby do
-  case ENV['MRUBY_VERSION'].downcase
+  case ENV['MRUBY_VERSION']&.downcase
   when 'head', 'master'
     sh(*%w[git clone --depth 1 git://github.com/mruby/mruby.git])
   when 'stable'
