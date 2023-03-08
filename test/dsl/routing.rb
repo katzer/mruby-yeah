@@ -68,7 +68,7 @@ assert 'Yeah::DSL::Routing#root' do
 end
 
 assert 'Yeah::DSL::Routing#redirect' do
-  app = build_app { redirect '/' => '/index.html' }
+  app = build_app { redirect({ '/' => '/index.html' }) }
   app = Shelf::Server.new.build_app(app)
 
   status, headers, = app.call(env_for('/'))
